@@ -1,38 +1,155 @@
 console.log("loaded sofatime.js")
-dayjs.extend(window.dayjs_plugin_utc)
-dayjs.extend(window.dayjs_plugin_timezone)
+
 
 function Sofatime(container) {
+    dayjs.extend(window.dayjs_plugin_utc)
+    dayjs.extend(window.dayjs_plugin_timezone)
     this.container = container ? container : document;
     this.sofatimeComponents = []
-    this.state = {
-        is24: true,
-        timezone: '',
-    }
+    this.state = {}
 
     //Load all elements with the sofatime wrapper class and create components from them
-    this.container.querySelectorAll('.sofatime-24h-wrapper').forEach(function(el) {
-        this.sofatimeComponents.push(new SofatimeComponent(el))
+    this.container.querySelectorAll('.sofatime').forEach(function(el) {
+        this.sofatimeComponents.push(new SofatimeComponent(el, this))
     }.bind(this))
+
+    //Set the initial state
+    this.setState({
+        is24: false,
+        timezone: 'EST'
+    })
+}
+/**
+ * Copies all properties from the new state to Sofatimes state and re-renders all children if there is a change
+ * @param {object} state new state value
+ */
+Sofatime.prototype.setState = function(state) {
+    var stateChange = false
+    var keys = Object.keys(state)
+    for (var i = 0; i < keys.length; i++) {
+        if (this.state[keys[i]] !== state[keys[i]]) {
+            stateChange = true;
+            this.state[keys[i]] = state[keys[i]]
+        }
+    }
+    if (stateChange) {
+        console.log(this.state)
+        this.sofatimeComponents.forEach(function(s) {
+            s.render()
+        })
+    }
 }
 
 /**
- * Updates all the sofatime components on the page with updated 24 and timezone state
- */
-Sofatime.prototype.updateAll = function() {}
+ * Get a ical formatted string from an entry
+ *
 
-function SofatimeComponent(el) {
-    // Calendar entry, follows format for importing CSV into google calendar, probably standard elsewhere as well	
-    this.entry = {
-        'Subject: false, //Required
-        'Start Date: false, //Required
-        'Start Time: false,
-        'End Date: false,
-        'End Time: false,
-        'Description: false,
-        'Location: false
+BEGIN:VEVENT
+UID:19970901T130000Z-123401@example.com
+DTSTAMP:19970901T130000Z
+DTSTART:19970903T163000Z
+DTEND:19970903T190000Z
+SUMMARY:Annual Employee Review
+CLASS:PRIVATE
+CATEGORIES:BUSINESS,HUMAN RESOURCES
+END:VEVENT
+
+
+ * DTSTART should look something like this
+ * DTSTART;TZID=America/New_York:19970714T133000
+ */
+Sofatime.staticGetICalFormat = function(day, timezone) {
+    var ical = 'BEGIN:VCALENDAR\n' +
+        'VERSION:2.0\n' +
+        'PRODID:-//hacksw/handcal//NONSGML v1.0//EN\n' +
+        'BEGIN:VEVENT\n'
+
+
+    ical += 'UID:AF23B2@example.com\n'
+    ical += 'DTSTAMP;TZID=' + timezone + day.format(':YYYYMMDDTHHmmss') + '\n'
+    ical += 'DTSTART;TZID=' + timezone + day.format(':YYYYMMDDTHHmmss') + '\n'
+    ical += 'END:VEVENT'
+    ical = 'data:text/calendar,' + ical
+    return ical
+}
+
+/**
+ * Individual event component, part of a Sofatime group
+ * @param {HTMLElement} el the root element for this event
+ * @param {Sofatime} parent the parent Sofatime component that this belongs to
+ */
+
+function SofatimeComponent(el, parent) {
+    this.day = null
+    this.element = el
+    this.parent = parent
+    this.parseInputValues()
+    this.addEventListeners()
+}
+
+/**
+ * Only runs once at initial creation
+ */
+SofatimeComponent.prototype.parseInputValues = function() {
+    var sample = '[sofatime]2020-01-01T1' + (Math.floor(Math.random() * 8) + 1) + ':00 America/New_York[/sofatime]'
+    var match = sample.match(/\[sofatime\]([0-9:\-TWZ]+)\s+([^[]+)\[\/sofatime\]/)
+    if (match) {
+        var datetime = match[1]
+        var timezone = match[2]
+        this.day = dayjs(datetime, timezone)
+    }
+
+}
+
+
+/**
+ * Adds change listeners for UI components. Note that these will fire when they are changed by the user or by the script that 
+ * synchronizes 24 time checkbox across different SofatimeComponents
+ */
+SofatimeComponent.prototype.addEventListeners = function() {
+    //Listener for toggling 24 hour time
+    this.element.querySelector('.sofatime-24h-checkbox').addEventListener('change', function(e) {
+        this.parent.setState({
+            is24: e.srcElement.checked
+        })
+    }.bind(this))
+
+    //Listener for timezone selection dropdown
+    this.element.querySelector('.sofatimezone-select').addEventListener('change', function(e) {
+        this.parent.setState({
+            timezone: e.srcElement.value
+        })
+    }.bind(this))
+}
+
+
+SofatimeComponent.prototype.render = function() {
+
+    document.getElementById('ical_test').href = Sofatime.staticGetICalFormat(this.day, this.parent.state.timezone)
+
+    //Set the 24h state checkbox
+    this.element.querySelector('.sofatime-24h-checkbox').checked = this.parent.state.is24
+    var format = (this.parent.state.is24) ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD hh:mma";
+    try {
+        //Set the display time
+        var dropdownOptions = this.element.querySelectorAll('.sofatimezone-select option')
+        this.element.querySelector('.sofatimezone-select').value = this.parent.state.timezone
+        this.element.querySelector('span').innerHTML = this.day.tz(this.parent.state.timezone).format(format)
+        for (var i = 0; i < dropdownOptions.length; i++) {
+            var dd = dropdownOptions[i]
+            let timezone = dd.value.match(/\S+/)
+            try {
+                dd.innerHTML = timezone[0] + ' ' + this.day.tz(timezone).format(format)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        //Set all of the times in the selector dropdown as well as the currently selected option
+    } catch (e) {
+        console.log(e)
     }
 }
+
 
 document.body.onload = () => {
     console.log("Loaded!")
@@ -43,161 +160,3 @@ document.body.onload = () => {
         console.log(e)
     }
 }
-/*
-jQuery(document).ready(function() {
-    if (!Intl || !Intl.DateTimeFormat().resolvedOptions().timeZone) {
-        console.log("sofatime: timezone conversion not available in this environment");
-        return false;
-    }
-    console.log("ASDDS")
-    sofatimeInitializeStrings();
-    jQuery('.sofatimezone-select').on('change', function() {
-        s24h = jQuery(this).closest('.sofatime').find('input[type="checkbox"]:first').prop("checked");
-        sofatimeChangeAll(this.value, s24h);
-    });
-    jQuery('.sofatime-24h-checkbox').on('change', function() {
-        var tzValue = jQuery(this).closest('.sofatime').find(".sofatimezone-select").val();
-        var s24h = this.checked
-        setTimeout(function() {
-            sofatimeChangeAll(tzValue, s24h);
-        }, 0)
-        // setTimeout(function(){ sofatimeAddLocalTimeToOptionNames( s24h ) }, 10);
-    });
-    sofatimeCheckLocalTimezoneIsInList();
-    sofatimeChangeAll(undefined, localIs24Hour());
-    // sofatimeAddLocalTimeToOptionNames();
-    sofatimeAddUTCOffsetToOptionNames();
-});
-*/
-function sofatimeCheckLocalTimezoneIsInList() {
-    // list is incomplete. If user's local timezone is not in the list, add it.
-    var options = jQuery.map(jQuery('.sofatimezone-select:first option'), function(option) {
-
-        return option.value
-    });
-    var tz = dayjs.tz.guess();
-    if (!options.includes(tz)) {
-        jQuery('.sofatimezone-select').each(function(index) {
-            jQuery(this).prepend(`<option value="${tz}">${tz}</option>`);
-        });
-    }
-}
-
-function sofatimeAddLocalTimeToOptionNames(s24h = false) {
-    format = (s24h) ? "HH:mm" : "h:mma";
-    jQuery(".sofatime").each(function(index) {
-        if (jQuery(this).data('datetime')) {
-            var thisDayjs = dayjs(jQuery(this).data('datetime'));
-            jQuery(this).find('option').each(function(index, option) {
-                var optionName = jQuery(this).html().replace(/^\d*:\d\da?p?m? /, "")
-                var localTimeString = thisDayjs.tz(option.value).format(format)
-                jQuery(this).html(localTimeString + " " + optionName)
-            })
-        }
-    });
-}
-
-function sofatimeAddUTCOffsetToOptionNames() {
-    jQuery(".sofatime").each(function(index) {
-        if (jQuery(this).data('datetime')) {
-            var thisDayjs = dayjs(jQuery(this).data('datetime'));
-            jQuery(this).find('option').each(function(index, option) {
-                var optionName = jQuery(this).html()
-                var localTimeString = thisDayjs.tz(option.value).format("Z")
-                // jQuery( this ).html( "UTC" + localTimeString + " " + optionName)
-                jQuery(this).append(" (UTC" + localTimeString + ")")
-            })
-        }
-    });
-}
-
-function sofatimeInitializeStrings() {
-    var altTZnames = {
-        eastern: "America/New_York",
-        central: "America/Chicago",
-        mountain: "America/Denver",
-        pacific: "America/Los_Angeles"
-    }
-    jQuery(".sofatime").each(function(index) {
-        var inputText = jQuery(this).find("span:first").text();
-        var dateMatches = inputText.match(/\d{4}-\d{2}-\d{2}(T| )\d{2}:\d{2}/g);
-        if (dateMatches && dateMatches.length == 1 && dayjs(dateMatches[0]).isValid()) {
-            var timezone = inputText.replace(dateMatches[0], "").trim();
-            if (timezone.match(/^z(ulu)?$/i)) timezone = "Etc/UTC";
-            else timezone = timezone.replace(/^z/i, "").trim();
-            timezone = altTZnames[timezone.toLowerCase()] || timezone
-            if (isValidTimeZone(timezone)) {
-                var sourceDateTime = dayjs.tz(dateMatches[0], timezone);
-                jQuery(this).data('datetime', sourceDateTime.toISOString());
-            }
-        }
-        if (jQuery(this).data('datetime')) {
-            jQuery(this).find("*").show();
-        } else {
-            jQuery(this).addClass("sofatime-error");
-            jQuery(this).find("span").prepend("[sofatime]");
-            jQuery(this).find("span").append("[/sofatime]<br />Invalid input. Use a ISO 8601 date and time, followed by a valid timezone name. <br />example: 2020-01-01 15:00 America/New_York<br />Valid timezone names include \"UTC\", a name from the <a href=\"https://en.wikipedia.org/wiki/List_of_tz_database_time_zones\">Timezone Database</a>, or one of the following: Eastern, Central, Mountain, Pacific");
-        }
-    });
-}
-
-function sofatimeChangeAll(tz = dayjs.tz.guess(), s24h = false) {
-    format = (s24h) ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD h:mma";
-    jQuery(".sofatime").each(function(index) {
-        if (jQuery(this).data('datetime')) {
-            var datetimeSpan = jQuery(this).find("span")
-            var thisDateFormatted = dayjs(jQuery(this).data('datetime')).tz(tz)
-            datetimeSpan.text(thisDateFormatted.format(format));
-
-            jQuery(this).find(".sofatimezone-select").val(tz);
-            jQuery(this).find('input[type="checkbox"]').prop('checked', s24h);
-        }
-    });
-}
-
-function isValidTimeZone(tz) {
-    if (!Intl || !Intl.DateTimeFormat().resolvedOptions().timeZone) {
-        throw 'Time zones are not available in this environment';
-    }
-
-    try {
-        Intl.DateTimeFormat(undefined, {
-            timeZone: tz
-        });
-        return true;
-    } catch (ex) {
-        return false;
-    }
-}
-
-// https://stackoverflow.com/questions/27647918/detect-with-javascript-if-users-machine-is-using-12-hour-clock-am-pm-or-24-cl
-function localIs24Hour(locale = navigator.language) {
-    return !new Intl.DateTimeFormat(locale, {
-        hour: 'numeric'
-    }).format(0).match(/\s/);
-}
-
-// adapted from solution by mrnateriver
-// https://stackoverflow.com/questions/9772955/how-can-i-get-the-timezone-name-in-javascript
-// not used because it returns "daylight / standard / summer" etc. for today's date, but may not
-// apply to the date in question.
-// function getTimezoneName() {
-//   var sourceDate = new Date();
-//   const short = sourceDate.toLocaleDateString(undefined);
-//   console.log(short)
-//   const full = sourceDate.toLocaleDateString(undefined, { timeZoneName: 'long' });
-//   console.log(full)
-//   // Trying to remove date from the string in a locale-agnostic way
-//   const shortIndex = full.indexOf(short);
-//   if (shortIndex >= 0) {
-//     const trimmed = full.substring(0, shortIndex) + full.substring(shortIndex + short.length);
-
-//     // by this time `trimmed` should be the timezone's name with some punctuation -
-//     // trim it from both sides
-//     return trimmed.replace(/^[\s,.\-:;]+|[\s,.\-:;]+$/g, '');
-
-//   } else {
-//     // in some magic case when short representation of date is not present in the long one, just return the long one as a fallback, since it should contain the timezone's name
-//     return full;
-//   }
-// }
