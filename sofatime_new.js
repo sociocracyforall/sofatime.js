@@ -4,17 +4,17 @@ function Sofatime(is24, timezone, container = document) {
     this.container = container
     this.sofatimeComponents = []
     this.state = {}
-
-    //Load all elements with the sofatime wrapper class and create components from them
-    this.container.querySelectorAll('.sofatime').forEach(function(el) {
-        this.sofatimeComponents.push(new SofatimeComponent(el, this))
-    }.bind(this))
-
     //Set the initial state
     this.setState({
         is24: is24,
         timezone: timezone
     })
+
+
+    //Load all elements with the sofatime wrapper class and create components from them
+    this.container.querySelectorAll('.sofatime').forEach(function(el) {
+        this.sofatimeComponents.push(new SofatimeComponent(el, this))
+    }.bind(this))
 }
 
 
@@ -80,13 +80,22 @@ function SofatimeComponent(el, parent) {
     this.day = null
     this.element = el
     this.parent = parent
-    this.parseInputValues()
     this.addEventListeners()
+    this.setState({
+        timezone: 'America/New_York',
+        datetime: '2020-01-01T17:00'
+    })
 }
 
+
+SofatimeComponent.prototype.setState = function(state) {
+    // Should check dayjs docs for best way to do
+    this.day = dayjs(state.datetime, state.timezone)
+    this.render()
+}
 /**
- * Only runs once at initial creation
- */
+ * Not currently used for anything
+ * */
 SofatimeComponent.prototype.parseInputValues = function() {
     var sample = '[sofatime]2020-01-01T1' + (Math.floor(Math.random() * 8) + 1) + ':00 America/New_York[/sofatime]'
     var match = sample.match(/\[sofatime\]([0-9:\-TWZ]+)\s+([^[]+)\[\/sofatime\]/)
