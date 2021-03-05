@@ -1,10 +1,7 @@
-console.log("loaded sofatime.js")
-
-
-function Sofatime(container) {
+function Sofatime(is24, timezone, container = document) {
     dayjs.extend(window.dayjs_plugin_utc)
     dayjs.extend(window.dayjs_plugin_timezone)
-    this.container = container ? container : document;
+    this.container = container
     this.sofatimeComponents = []
     this.state = {}
 
@@ -15,25 +12,25 @@ function Sofatime(container) {
 
     //Set the initial state
     this.setState({
-        is24: false,
-        timezone: 'EST'
+        is24: is24,
+        timezone: timezone
     })
 }
+
+
 /**
  * Copies all properties from the new state to Sofatimes state and re-renders all children if there is a change
  * @param {object} state new state value
  */
 Sofatime.prototype.setState = function(state) {
     var stateChange = false
-    var keys = Object.keys(state)
-    for (var i = 0; i < keys.length; i++) {
-        if (this.state[keys[i]] !== state[keys[i]]) {
+    for (var key in state) {
+        if (state.hasOwnProperty(key) && state[key] !== this.state[key]) {
+            this.state[key] = state[key]
             stateChange = true;
-            this.state[keys[i]] = state[keys[i]]
         }
     }
     if (stateChange) {
-        console.log(this.state)
         this.sofatimeComponents.forEach(function(s) {
             s.render()
         })
@@ -98,8 +95,26 @@ SofatimeComponent.prototype.parseInputValues = function() {
         var timezone = match[2]
         this.day = dayjs(datetime, timezone)
     }
-
+    this.renderOptionsList()
 }
+
+
+SofatimeComponent.prototype.renderOptionsList = function() {
+    //Set the time in all of the dropdowns. This really only needs to be done initially, not on every render unless the componenet event time is being changed.
+    var dropdownOptions = this.element.querySelectorAll('.sofatimezone-select option')
+    var format = (this.parent.state.is24) ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD hh:mma";
+    for (var i = 0; i < dropdownOptions.length; i++) {
+        var dd = dropdownOptions[i]
+        var timezone = dd.value.match(/\S+/)
+        try {
+            dd.innerHTML = timezone[0] + ' ' + this.day.tz(timezone).format(format)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+}
+
+
 
 
 /**
@@ -124,38 +139,30 @@ SofatimeComponent.prototype.addEventListeners = function() {
 
 
 SofatimeComponent.prototype.render = function() {
-
+    //@TEMP Just a quick test of the .ics download
     document.getElementById('ical_test').href = Sofatime.staticGetICalFormat(this.day, this.parent.state.timezone)
-
     //Set the 24h state checkbox
     this.element.querySelector('.sofatime-24h-checkbox').checked = this.parent.state.is24
+
+    //This should probably just be a prop of the parent
     var format = (this.parent.state.is24) ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD hh:mma";
     try {
         //Set the display time
-        var dropdownOptions = this.element.querySelectorAll('.sofatimezone-select option')
-        this.element.querySelector('.sofatimezone-select').value = this.parent.state.timezone
         this.element.querySelector('span').innerHTML = this.day.tz(this.parent.state.timezone).format(format)
-        for (var i = 0; i < dropdownOptions.length; i++) {
-            var dd = dropdownOptions[i]
-            let timezone = dd.value.match(/\S+/)
-            try {
-                dd.innerHTML = timezone[0] + ' ' + this.day.tz(timezone).format(format)
-            } catch (e) {
-                console.log(e)
-            }
-        }
-        //Set all of the times in the selector dropdown as well as the currently selected option
+        //This only needs to be re-rendered when is24 changes, should check to avoid re-rendering when only timezone changes.
+        this.renderOptionsList()
+        //Set the currently selected timezone option
+        this.element.querySelector('.sofatimezone-select').value = this.parent.state.timezone
     } catch (e) {
         console.log(e)
     }
 }
 
-
+// Initialize after page is loaded. Note, arrow notation () => is an ES6+ feature.
 document.body.onload = () => {
     console.log("Loaded!")
     try {
-        var sofatime = new Sofatime()
-        console.log(sofatime)
+        window.sofa = new Sofatime(true, 'America/Phoenix')
     } catch (e) {
         console.log(e)
     }
