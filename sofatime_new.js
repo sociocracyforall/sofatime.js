@@ -4,7 +4,7 @@ function Sofatime(is24, timezone, container = document) {
     this.container = container
     this.sofatimeComponents = []
     this.state = {}
-    //Set the initial state
+    //Set the initial state.
     this.setState({
         is24: is24,
         timezone: timezone
@@ -76,9 +76,9 @@ Sofatime.staticGetICalFormat = function(day, timezone) {
  * @param {Sofatime} parent the parent Sofatime component that this belongs to
  */
 
-function SofatimeComponent(el, parent) {
+function SofatimeComponent(root, parent) {
     this.day = null
-    this.element = el
+    this.root = root
     this.parent = parent
     this.addEventListeners()
     this.setState({
@@ -110,7 +110,7 @@ SofatimeComponent.prototype.parseInputValues = function() {
 
 SofatimeComponent.prototype.renderOptionsList = function() {
     //Set the time in all of the dropdowns. This really only needs to be done initially, not on every render unless the componenet event time is being changed.
-    var dropdownOptions = this.element.querySelectorAll('.sofatimezone-select option')
+    var dropdownOptions = this.root.querySelectorAll('.sofatimezone-select option')
     var format = (this.parent.state.is24) ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD hh:mma";
     for (var i = 0; i < dropdownOptions.length; i++) {
         var dd = dropdownOptions[i]
@@ -132,14 +132,14 @@ SofatimeComponent.prototype.renderOptionsList = function() {
  */
 SofatimeComponent.prototype.addEventListeners = function() {
     //Listener for toggling 24 hour time
-    this.element.querySelector('.sofatime-24h-checkbox').addEventListener('change', function(e) {
+    this.root.querySelector('.sofatime-24h-checkbox').addEventListener('change', function(e) {
         this.parent.setState({
             is24: e.srcElement.checked
         })
     }.bind(this))
 
     //Listener for timezone selection dropdown
-    this.element.querySelector('.sofatimezone-select').addEventListener('change', function(e) {
+    this.root.querySelector('.sofatimezone-select').addEventListener('change', function(e) {
         this.parent.setState({
             timezone: e.srcElement.value
         })
@@ -151,17 +151,17 @@ SofatimeComponent.prototype.render = function() {
     //@TEMP Just a quick test of the .ics download
     document.getElementById('ical_test').href = Sofatime.staticGetICalFormat(this.day, this.parent.state.timezone)
     //Set the 24h state checkbox
-    this.element.querySelector('.sofatime-24h-checkbox').checked = this.parent.state.is24
+    this.root.querySelector('.sofatime-24h-checkbox').checked = this.parent.state.is24
 
     //This should probably just be a prop of the parent
     var format = (this.parent.state.is24) ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD hh:mma";
     try {
         //Set the display time
-        this.element.querySelector('span').innerHTML = this.day.tz(this.parent.state.timezone).format(format)
+        this.root.querySelector('span').innerHTML = this.day.tz(this.parent.state.timezone).format(format)
         //This only needs to be re-rendered when is24 changes, should check to avoid re-rendering when only timezone changes.
         this.renderOptionsList()
         //Set the currently selected timezone option
-        this.element.querySelector('.sofatimezone-select').value = this.parent.state.timezone
+        this.root.querySelector('.sofatimezone-select').value = this.parent.state.timezone
     } catch (e) {
         console.log(e)
     }
