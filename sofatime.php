@@ -128,7 +128,7 @@ function sofatime_shortcode_function($atts, $content = null) {
   $out = '<div class="sofatime"';
   foreach($atts as $key => $value)
   {
-    if(ctype_alnum($key))
+    if(preg_match("/^[a-zA-Z0-9_\-]+$/",$key))
     {
       $out .= ' data-'.strtolower($key).'="'.htmlspecialchars($value).'"';
     }
