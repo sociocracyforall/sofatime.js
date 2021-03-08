@@ -123,6 +123,8 @@ function sofatime_shortcode_function($atts, $content = null) {
     </select>
   ';
 
+  
+  
   $out = '<div class="sofatime"';
   foreach($atts as $key => $value)
   {
@@ -134,11 +136,11 @@ function sofatime_shortcode_function($atts, $content = null) {
   
   $out .= "><form action=\"#\">\n";
   
-  if(isset($atts['display-time']) && ($atts['display-time'] == 'yes' || $atts['display-time'] == 'true'))
+  if(!isset($atts['display-time']) || ($atts['display-time'] != 'no' && $atts['display-time'] != 'false'))
   {
             $out .= "<span>".$content."</span>\n";
   }
-  if(isset($atts['display-24h-toggle']) && ($atts['display-24h-toggle'] == 'yes' || $atts['display-24h-toggle'] == 'true'))
+  if(!isset($atts['display-24h-toggle']) || ($atts['display-24h-toggle'] != 'no' && $atts['display-24h-toggle'] != 'false'))
   {
             $out .= '<div class="sofatime-24h-wrapper">
               <input type="checkbox" class="sofatime-24h-checkbox" id="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">
@@ -146,7 +148,7 @@ function sofatime_shortcode_function($atts, $content = null) {
               <p>24h</p>
             </div>';
   }
-  if(isset($atts['display-select']) && ($atts['display-select'] == 'yes' || $atts['display-select'] == 'true'))
+  if(!isset($atts['display-select']) || ($atts['display-select'] != 'no' && $atts['display-select'] != 'false'))
   {
            $out .= "<div class=\"sofatime-select-wrapper\">".$sofatimezone_select."</div>\n";
   }
