@@ -123,14 +123,36 @@ function sofatime_shortcode_function($atts, $content = null) {
     </select>
   ';
 
-  return '<div class="sofatime"><form action="#">
-            <span>'.$content.'</span>
-            <div class = "sofatime-24h-wrapper">
-              <input type=checkbox class="sofatime-24h-checkbox" id="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">
-              <label class = "sofatime-24h-label" for="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">24h</label>
+  $out = '<div class="sofatime"';
+  foreach($atts as $key => $value)
+  {
+    if(ctype_alnum($key))
+    {
+      $out .= ' data-'.strtolower($key).'="'.htmlspecialchars($value).'"';
+    }
+  }
+  
+  $out .= "><form action=\"#\">\n";
+  
+  if(isset($atts['display-time']) && ($atts['display-time'] == 'yes' || $atts['display-time'] == 'true'))
+  {
+            $out .= "<span>".$content."</span>\n";
+  }
+  if(isset($atts['display-24h-toggle']) && ($atts['display-24h-toggle'] == 'yes' || $atts['display-24h-toggle'] == 'true'))
+  {
+            $out .= '<div class="sofatime-24h-wrapper">
+              <input type="checkbox" class="sofatime-24h-checkbox" id="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">
+              <label class="sofatime-24h-label" for="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">24h</label>
               <p>24h</p>
-            </div>
-            <div class = "sofatime-select-wrapper">'.$sofatimezone_select.'</div>
-          </form></div>';
+            </div>';
+  }
+  if(isset($atts['display-select']) && ($atts['display-select'] == 'yes' || $atts['display-select'] == 'true'))
+  {
+           $out .= "<div class=\"sofatime-select-wrapper\">".$sofatimezone_select."</div>\n";
+  }
+  $out .= "</form></div>\n";
+  
+  
+  return $out;
 }
 
