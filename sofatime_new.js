@@ -13,8 +13,8 @@ function Sofatime(is24, timezone, root = document) {
 }
 
 Sofatime.prototype.getLocale = function() {
-    let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    let is24 = !Intl.DateTimeFormat(navigator.locale, {
+    var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    var is24 = !Intl.DateTimeFormat(navigator.locale, {
         hour: 'numeric'
     }).format(0).match(/[A-Z]/)
     return {
