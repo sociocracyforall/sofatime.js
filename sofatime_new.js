@@ -175,8 +175,7 @@ SofatimeComponent.prototype.render = function() {
 }
 
 // Initialize after page is loaded. Note, arrow notation () => is an ES6+ feature.
-document.body.onload = () => {
+window.addEventListener('load', function() {
     console.log("body loaded!")
-    window.sofa = new Sofatime(true, 'America/Phoenix')
-
-}
+    window.sofa = new Sofatime()
+})
