@@ -5,14 +5,22 @@ function Sofatime(is24, timezone, root = document) {
     this.sofatimeComponents = []
     this.state = {}
     //Set the initial state.
-    this.setState({
-        is24: is24,
-        timezone: timezone
-    })
+    this.setState(this.getLocale())
     //Load all elements with the sofatime wrapper class and create components from them
     this.root.querySelectorAll('.sofatime').forEach(function(el) {
         this.sofatimeComponents.push(new SofatimeComponent(el, this))
     }.bind(this))
+}
+
+Sofatime.prototype.getLocale = function() {
+    let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    let is24 = !Intl.DateTimeFormat(navigator.locale, {
+        hour: 'numeric'
+    }).format(0).match(/[A-Z]/)
+    return {
+        timezone: timezone,
+        is24: is24
+    }
 }
 /**
  * Copies all properties from the new state to Sofatimes state and re-renders all children if there is a change
@@ -43,17 +51,25 @@ Sofatime.prototype.setState = function(state) {
 function SofatimeComponent(root, parent) {
     this.root = root
     this.parent = parent
+    this.state = {}
     this.boundElements = {
         is24Checkbox: root.querySelector('.sofatime-24h-checkbox'),
         optionList: root.querySelector('.sofatimezone-select'),
+        optionListOptions: null,
         displayElements: root.querySelectorAll('span')
+    }
+    if (this.boundElements.optionList) {
+        this.boundElements.optionListOptions = this.boundElements.optionList.querySelectorAll('option')
     }
     this.addEventListeners()
     this.day = null
-    this.setState({
-        timezone: 'America/New_York',
-        datetime: '2020-01-01T17:00'
-    })
+    this.setState(this.parseInputValues())
+    /*
+      this.setState({
+          timezone: 'America/New_York',
+          datetime: '2020-01-01T17:00'
+      })
+      */
 }
 /**
  * Adds change listeners for UI components. Note that these will fire when they are changed by the user or by the script that 
@@ -81,32 +97,42 @@ SofatimeComponent.prototype.addEventListeners = function() {
 SofatimeComponent.prototype.setState = function(state) {
     // Should check dayjs docs for best way to do
     this.day = dayjs(state.datetime, state.timezone)
+    if (state && state.error !== undefined) this.state.error = state.error
     this.render()
 }
 /**
- * Not currently used for anything
  * */
 SofatimeComponent.prototype.parseInputValues = function() {
-    var sample = '[sofatime]2020-01-01T1' + (Math.floor(Math.random() * 8) + 1) + ':00 America/New_York[/sofatime]'
-    var match = sample.match(/\[sofatime\]([0-9:\-TWZ]+)\s+([^[]+)\[\/sofatime\]/)
-    if (match) {
-        this.setState({
-            timezone: match[2],
-            datetime: match[1]
-        })
-    }
+    var inputValue = this.boundElements.displayElements[0]
+    if (!inputValue) {
+        return {
+            error: "Failed find a date input"
+        }
 
+    } else {
+        var match = inputValue.innerText.match(/([0-9\-]{10}[T ]\S+)\s+(.+)/)
+        if (match) {
+            return {
+                timezone: match[2],
+                datetime: match[1]
+            }
+        } else {
+            return {
+                error: 'Failed to parse a valid datetime from input'
+            }
+        }
+    }
 }
 
 SofatimeComponent.prototype.renderOptionsList = function() {
     if (!this.boundElements.optionList) return;
-    var dropdownOptions = this.boundElements.optionList.querySelectorAll('option')
     var format = (this.parent.state.is24) ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD hh:mma";
-    for (var i = 0; i < dropdownOptions.length; i++) {
-        var option = dropdownOptions[i]
-        var timezone = option.value.match(/\S+/)
+    for (var i = 0; i < this.boundElements.optionListOptions.length; i++) {
+        var option = this.boundElements.optionListOptions[i]
+        option.originalText = option.originalText ? option.originalText : option.innerHTML
+        var timezone = option.value
         try {
-            var optionText = timezone[0] + ' ' + this.day.tz(timezone).format(format).toUpperCase()
+            var optionText = option.originalText + ' (' + this.day.tz(timezone).format(format).toUpperCase() + ')'
             // Only update options text when changed, this could be more efficiently done in setState
             if (option.innerHTML !== optionText) {
                 option.innerHTML = optionText
@@ -121,16 +147,21 @@ SofatimeComponent.prototype.render = function() {
     //This should probably just be a prop of the parent
     var format = (this.parent.state.is24) ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD hh:mma";
     try {
-        if(this.boundElements.is24Checkbox) {
-          this.boundElements.is24Checkbox.checked = this.parent.state.is24
-        }
-
-        //Set the display time
-        if (this.boundElements.displayElements) {
+        if (this.state.error) {
+            console.log(this.state.error)
+            this.boundElements.displayElements[0].innerHTML = this.state.error
+            this.boundElements.displayElements[0].classList.add('sofatime-error')
+            return
+        } else {
             this.boundElements.displayElements.forEach(function(el) {
                 el.innerHTML = this.day.tz(this.parent.state.timezone).format(format)
             }.bind(this))
         }
+
+        if (this.boundElements.is24Checkbox) {
+            this.boundElements.is24Checkbox.checked = this.parent.state.is24
+        }
+
         if (this.boundElements.optionList) {
             //This only needs to be re-rendered when is24 changes, should check to avoid re-rendering when only timezone changes.
             this.renderOptionsList()

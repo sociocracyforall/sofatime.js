@@ -10,6 +10,7 @@ jQuery(document).ready(function () {
     console.log("sofatime: timezone conversion not available in this environment");
     return false;
   }
+  return
   sofatimeInitializeStrings();
   jQuery('.sofatimezone-select').on('change', function() {
     s24h = jQuery( this ).closest('.sofatime').find('input[type="checkbox"]:first').prop( "checked" );
