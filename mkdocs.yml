@@ -1,0 +1,6 @@
+site_name: Sofatime Docs
+theme: readthedocs
+site_dir: site
+markdown_extensions:
+    - mdx_gfm
+docs_dir: markdown

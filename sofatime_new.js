@@ -13,8 +13,8 @@ function Sofatime(is24, timezone, root = document) {
 }
 
 Sofatime.prototype.getLocale = function() {
-    let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-    let is24 = !Intl.DateTimeFormat(navigator.locale, {
+    var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    var is24 = !Intl.DateTimeFormat(navigator.locale, {
         hour: 'numeric'
     }).format(0).match(/[A-Z]/)
     return {
@@ -44,19 +44,20 @@ Sofatime.prototype.setState = function(state) {
 
 /**
  * Individual event component, part of a Sofatime group
- * @param {HTMLElement} el the root element for this event
+ * @param {HTMLElement} root the root element for this event
  * @param {Sofatime} parent the parent Sofatime component that this belongs to
  */
 
 function SofatimeComponent(root, parent) {
-    this.root = root
-    this.parent = parent
+    this.root = root 
+    this.parent = parent //Javascript Sofatime object, not a dom node
     this.state = {}
     this.boundElements = {
         is24Checkbox: root.querySelector('.sofatime-24h-checkbox'),
         optionList: root.querySelector('.sofatimezone-select'),
         optionListOptions: null,
-        displayElements: root.querySelectorAll('span')
+        startTime: root.querySelector('sofatime-start-time'),
+        endTime: root.querySelector('sofatime-end-time')
     }
     if (this.boundElements.optionList) {
         this.boundElements.optionListOptions = this.boundElements.optionList.querySelectorAll('option')
@@ -103,6 +104,10 @@ SofatimeComponent.prototype.setState = function(state) {
 /**
  * */
 SofatimeComponent.prototype.parseInputValues = function() {
+    return {
+      timezone: "America/New_York",
+      datetime: ""
+    }
     var inputValue = this.boundElements.displayElements[0]
     if (!inputValue) {
         return {
@@ -174,7 +179,6 @@ SofatimeComponent.prototype.render = function() {
     }
 }
 
-// Initialize after page is loaded. Note, arrow notation () => is an ES6+ feature.
 window.addEventListener('load', function() {
     console.log("body loaded!")
     window.sofa = new Sofatime()

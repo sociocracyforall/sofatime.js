@@ -1,13 +1,42 @@
 <html>
+
 <link rel='stylesheet' type='text/css' href='sofatime.css' />
 <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
 <script src="https://unpkg.com/dayjs/plugin/utc.js"></script>
 <script src="https://unpkg.com/dayjs/plugin/timezone.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
 <script type='text/javascript' src='sofatime_new.js'></script>
 
 <body>
+
+    <div class="sofatime" data-user-string='2021-01-01T12:00 America/New_York to 6pm America/New_York'>
+        <div>
+            <div class="sofatime-start-time"></div>
+            <div class="sofatime-end-time"></div>
+        </div>
+        <!-- Is form necessary? should other parts of component be in the form? -->
+        <form action="#">
+            <div class="sofatime-24h-wrapper">
+                <input type="checkbox" class="sofatime-24h-checkbox" id="sofatime-24h-1">
+                <label class="sofatime-24h-label" for="sofatime-24h-1">24h</label>
+                <p>24h</p>
+            </div>
+
+            <div class="sofatime-select-wrapper">
+                <select class="sofatimezone-select">
+                    <option value="Pacific/Honolulu">Hawaii Time</option>
+                    <option value="America/Adak">Alaska - Aleutian Islands -
+                        Adak</option>
+                    <option value="America/Juneau">Alaska Time</option>
+                    <option value="America/Los_Angeles">Pacific Time -</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+
+    <h1>--------------------------------------------------------------------------------</h1>
+
+
     <div class="sofatime lazyloaded">
         <form action="#"> <span>2021-01-01 12:00 America/New_York</span>
             <div class="sofatime-24h-wrapper lazyloaded"> <input type="checkbox"
