@@ -107,7 +107,9 @@ function sofatimeChangeAll(tz = dayjs.tz.guess(), s24h = false ) {
       var datetimeSpan = jQuery( this ).find("span")
       var thisDateFormatted = dayjs( jQuery( this ).data('datetime') ).tz(tz)
       datetimeSpan.text( thisDateFormatted.format(format) );
-
+      if( jQuery( this ).data('display-select') == "no" || jQuery( this ).data('display-select') == "false" ) {
+        datetimeSpan.append( " UTC" + thisDateFormatted.format("Z") )
+      };
       jQuery( this ).find(".sofatimezone-select").val( tz );
       jQuery( this ).find('input[type="checkbox"]').prop('checked', s24h);
     }
