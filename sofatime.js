@@ -76,25 +76,30 @@ function sofatimeInitializeStrings() {
     pacific: "America/Los_Angeles"
   }
   jQuery( ".sofatime" ).each(function( index ) {
-    var inputText = jQuery( this ).find("span:first").text();
-    var dateMatches = inputText.match(/\d{4}-\d{2}-\d{2}(T| )\d{2}:\d{2}/g);
-    if ( dateMatches && dateMatches.length == 1 && dayjs(dateMatches[0]).isValid() ) {
-      var timezone = inputText.replace(dateMatches[0],"").trim();
-      if( timezone.match(/^z(ulu)?$/i) ) timezone = "Etc/UTC";
-        else timezone = timezone.replace(/^z/i,"").trim();
-      timezone = altTZnames[timezone.toLowerCase()] || timezone
-      if( isValidTimeZone( timezone ) ){
-        var sourceDateTime = dayjs.tz( dateMatches[0], timezone );
-        jQuery( this ).data('datetime', sourceDateTime.toISOString() );
+    var inputTextSpan = jQuery( this ).find("span:first")
+    if(inputTextSpan.length > 0) {
+      var inputText = inputTextSpan.text()
+      console.log("input text = " + inputText)
+      var dateMatches = inputText.match(/\d{4}-\d{2}-\d{2}(T| )\d{2}:\d{2}/g);
+      if ( dateMatches && dateMatches.length == 1 && dayjs(dateMatches[0]).isValid() ) {
+        var timezone = inputText.replace(dateMatches[0],"").trim();
+        if( timezone.match(/^z(ulu)?$/i) ) timezone = "Etc/UTC";
+          else timezone = timezone.replace(/^z/i,"").trim();
+        timezone = altTZnames[timezone.toLowerCase()] || timezone
+        if( isValidTimeZone( timezone ) ){
+          var sourceDateTime = dayjs.tz( dateMatches[0], timezone );
+          jQuery( this ).data('datetime', sourceDateTime.toISOString() );
+        }
       }
-    }
-    if( jQuery( this ).data('datetime') ) {
-      jQuery( this ).find("*").show();
-    }
-    else {
-      jQuery( this ).addClass("sofatime-error");
-      jQuery( this ).find("span").prepend("[sofatime]");
-      jQuery( this ).find("span").append("[/sofatime]<br />Invalid input. Use a ISO 8601 date and time, followed by a valid timezone name. <br />example: 2020-01-01 15:00 America/New_York<br />Valid timezone names include \"UTC\", a name from the <a href=\"https://en.wikipedia.org/wiki/List_of_tz_database_time_zones\">Timezone Database</a>, or one of the following: Eastern, Central, Mountain, Pacific");
+      if( jQuery( this ).data('datetime') ) {
+        jQuery( this ).find("*").show();
+      }
+      else {
+        console.log("invalid text")
+        jQuery( this ).addClass("sofatime-error");
+        jQuery( this ).find("span").prepend("[sofatime]");
+        jQuery( this ).find("span").append("[/sofatime]<br />Invalid input. Use a ISO 8601 date and time, followed by a valid timezone name. <br />example: 2020-01-01 15:00 America/New_York<br />Valid timezone names include \"UTC\", a name from the <a href=\"https://en.wikipedia.org/wiki/List_of_tz_database_time_zones\">Timezone Database</a>, or one of the following: Eastern, Central, Mountain, Pacific");
+      }
     }
   });
 }
