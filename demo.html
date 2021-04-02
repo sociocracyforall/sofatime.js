@@ -9,7 +9,9 @@
       class="sofatime"
       data-user-string="2021-01-01T12:00 America/New_York to 6pm America/New_York"
     >
-      <div class="sofatime-start" data-format="mm"></div>
+      <!-- See https://day.js.org/docs/en/display/format -->
+      <!-- Note: 24 hour toggle checkbox will toggle case for h characters -->
+      <div class="sofatime-start" data-format="YYYY-MM-DD HH:mm"></div>
       <div class="sofatime-end" data-format="mm"></div>
       <input class="sofatime-checkbox" type="checkbox" />
       <select class="sofatime-select">
