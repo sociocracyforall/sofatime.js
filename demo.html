@@ -1,0 +1,23 @@
+<html>
+  <link rel="stylesheet" type="text/css" href="sofatime.css" />
+  <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
+  <script src="https://unpkg.com/dayjs/plugin/utc.js"></script>
+  <script src="https://unpkg.com/dayjs/plugin/timezone.js"></script>
+  <script src="sofatime_new.js"></script>
+  <body>
+    <div
+      class="sofatime"
+      data-user-string="2021-01-01T12:00 America/New_York to 6pm America/New_York"
+    >
+      <div class="sofatime-start" data-format="mm"></div>
+      <div class="sofatime-end" data-format="mm"></div>
+      <input class="sofatime-checkbox" type="checkbox" />
+      <select class="sofatime-select">
+        <option value="Pacific/Honolulu">Hawaii Time</option>
+        <option value="America/Adak">Alaska - Aleutian Islands - Adak</option>
+        <option value="America/Juneau">Alaska Time</option>
+        <option value="America/Los_Angeles">Pacific Time -</option>
+      </select>
+    </div>
+  </body>
+</html>
