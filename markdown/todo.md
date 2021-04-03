@@ -7,6 +7,7 @@
 - [ ] Make 'h' toggle respect escaped 'h' chars
 - [ ] Decide if options should accept format strings
 - [ ] Finalize option list format and input
+- [ ] DWIM functionality on date inputs
 
 ```
     { timezone: 'Pacific/Honolulu', baseText: 'Hawaii Time' },
