@@ -1,0 +1,21 @@
+.sofatime {
+  display: inline-block;
+  min-width: 30em;
+  border: 1px solid #000;
+  padding: .5em;
+}
+
+.startTime {
+  background-color: #CCFFCC;
+}
+.sofatime-end {
+  background-color: #FFCCCC;
+}
+.sofatime-start {
+  display: inline-block;
+  box-sizing: border-box;
+  border: 2px solid #000;
+}
+.sofatime-select {
+  font-family: monospace;
+}
