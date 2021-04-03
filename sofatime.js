@@ -223,7 +223,7 @@ SofatimeComponent.prototype.renderDayjsTimes = function (day, els, is24) {
   if (!day || !els.length) return
   for (var i = 0; i < els.length; i++) {
     var el = els[i]
-    let formatString = el.dataset.format
+    let formatString = el.dataset.format?el.dataset.format:''
     if (is24) {
       formatString = formatString.replace(/h/g, 'H')
     } else {
