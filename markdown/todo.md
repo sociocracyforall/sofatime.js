@@ -1,9 +1,12 @@
 # To Do
 
-## Option List
-- Behaviour when locale timezone is not in option list
-- Should options have ability to take a format string? Should options be on state and be mutable after initialization?
-- [ ] Move data into json file or into script file
+## Script
+
+- [ ] rename sofatime
+- [ ] Decide behaviour when locale timezone is not in option list.
+- [ ] Make 'h' toggle respect escaped 'h' chars
+- [ ] Decide if options should accept format strings
+- [ ] Finalize option list format and input
 
 ```
     { timezone: 'Pacific/Honolulu', baseText: 'Hawaii Time' },
@@ -15,8 +18,12 @@
     { optgroupEnd: true },
 ```
 
----
-## Graceful failure on nojs/no intl.
-## Testing & Documentation
-- [ ] data-start, data-end, data-ampm
-- [ ] requirements
+- [ ] Graceful failure on nojs/no intl/dayjs.
+- [ ] Testing & Documentation
+    - [ ] data-start, data-end, data-ampm, timzones
+    - [ ] How should errors be communicated
+    - [ ] requirements
+    - [ ] browser and phone testing
+
+## Design
+## Wordpress

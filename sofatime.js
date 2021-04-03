@@ -3,6 +3,16 @@ function Sofatime(is24, timezone, root = document) {
   dayjs.extend(window.dayjs_plugin_timezone)
   this.root = root
   this.children = []
+  var timezones = [
+    { timezone: 'Pacific/Honolulu', baseText: 'Hawaii Time' },
+    { optgroup: 'Americas' },
+    { timezone: 'America/New_York', baseText: 'New York' },
+    { timezone: 'America/Adak', baseText: 'Alaska - Aleutian Islands - Adak' },
+    { timezone: 'America/Juneau', baseText: 'Alaska Time' },
+    { timezone: 'America/Los_Angeles', baseText: 'Pacific Time' },
+    { optgroupEnd: true },
+  ]
+
   this.state = {}
   //Load all elements with the sofatime wrapper class and create components from them
   this.root.querySelectorAll('.sofatime').forEach(
@@ -12,15 +22,12 @@ function Sofatime(is24, timezone, root = document) {
   )
   //Set the initial state.
   this.setState(this.getLocale())
+  this.setState({ timezones: timezones })
 }
 
 Sofatime.prototype.getLocale = function () {
   var timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  var is24 = !Intl.DateTimeFormat(navigator.locale, {
-    hour: 'numeric',
-  })
-    .format(0)
-    .match(/[A-Z]/)
+  var is24 = !Intl.DateTimeFormat(navigator.locale, { hour: 'numeric' }).format(0).match(/[A-Z]/)
   return {
     timezone: timezone,
     is24: is24,
@@ -66,24 +73,19 @@ function SofatimeComponent(root, parent) {
     endTimes: root.querySelectorAll('.sofatime-end'),
   }
 
-  this.timezones = [
-    { timezone: 'Pacific/Honolulu', baseText: 'Hawaii Time' },
-    { optgroup: 'Americas' },
-    { timezone: 'America/New_York', baseText: 'New York' },
-    { timezone: 'America/Adak', baseText: 'Alaska - Aleutian Islands - Adak' },
-    { timezone: 'America/Juneau', baseText: 'Alaska Time' },
-    { timezone: 'America/Los_Angeles', baseText: 'Pacific Time' },
-    { optgroupEnd: true },
-  ]
+  /* 
   if (this.boundElements.optionList) {
-    this.createOptionListHtml(this.timezones)
+    this.createOptionListHtml(this.parent.state.timezones)
   }
+  */
   this.addEventListeners()
   this.dayjsStartTime = null
   this.dayjsEndTime = null
   this.setState({ startDatetime: root.dataset.start, endDatetime: root.dataset.end })
 }
+
 SofatimeComponent.prototype.createOptionListHtml = function (options) {
+  if (!this.boundElements.optionList) return
   var html = ''
   for (var i = 0; i < options.length; i++) {
     var option = options[i]
@@ -164,6 +166,11 @@ SofatimeComponent.prototype.render = function (stateChange) {
     return
   }
 
+  //If the timezone list changes, re-generate timezone option list html
+  if (stateChange.timezones) {
+    this.createOptionListHtml(this.parent.state.timezones)
+  }
+
   //Update the checkbox to ensure it matches the global 24 hour state
   if (stateChange.is24 && this.boundElements.is24Checkbox) {
     this.boundElements.is24Checkbox.checked = this.parent.state.is24
@@ -178,7 +185,7 @@ SofatimeComponent.prototype.render = function (stateChange) {
   }
 
   //Render the option list
-  if (stateChange.timezone || stateChange.is24) {
+  if (stateChange.timezone || stateChange.is24 || stateChange.timezones) {
     this.renderOptionsList(stateChange)
   }
 }
@@ -189,7 +196,7 @@ SofatimeComponent.prototype.renderOptionsList = function (stateChange) {
   var format = this.parent.state.is24 ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD hh:mma'
 
   //If the 24 hour toggle has changed, re-render all options with the time for it's timezone
-  if (stateChange.is24) {
+  if (stateChange.is24 || stateChange.timezones) {
     for (var i = 0; i < this.boundElements.optionListOptions.length; i++) {
       var option = this.boundElements.optionListOptions[i]
       var timezone = option.value
