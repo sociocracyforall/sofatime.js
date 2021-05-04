@@ -7,16 +7,17 @@
 
 $sofatime_id_incrementer = 0;
 
+wp_register_script('dayjs', plugin_dir_url(__FILE__)."dayjs-1.9.5/dayjs.min.js", array(), '1.9.5');
+wp_register_script('dayjs-utc', plugin_dir_url(__FILE__)."dayjs-1.9.5/plugin/utc.min.js", array('dayjs'), '1.9.5');
+wp_register_script('dayjs-tz', plugin_dir_url(__FILE__)."dayjs-1.9.5/plugin/timezone.min.js", array('dayjs'), '1.9.5');
+
 add_action('wp_enqueue_scripts', 'sofatime_script_enqueue');
 add_action( 'init', 'sofatime_register_shortcodes');
 
 function sofatime_script_enqueue() {
-  $plugin_dir = plugin_dir_url(__FILE__);
-  wp_enqueue_script('dayjs', $plugin_dir."dayjs-1.9.5/dayjs.min.js");
-  wp_enqueue_script('dayjs-utc', $plugin_dir."dayjs-1.9.5/plugin/utc.min.js");
-  wp_enqueue_script('dayjs-tz', $plugin_dir."dayjs-1.9.5/plugin/timezone.min.js");
-  wp_enqueue_script('sofatime', $plugin_dir."sofatime.js");
-  wp_enqueue_style('sofatime-css', $plugin_dir."sofatime.css" );
+  $dir_path = plugin_dir_path(__FILE__);
+  wp_enqueue_script('sofatime', $dir_path."sofatime.js", array('dayjs-utc','dayjs-tz'), filemtime($dir_path."sofatime.js"));
+  wp_enqueue_style('sofatime-css', $dir_path."sofatime.css", array(), filemtime($dir_path."sofatime.css"));
 }
 
 function sofatime_register_shortcodes(){
@@ -157,4 +158,3 @@ function sofatime_shortcode_function($atts, $content = null) {
   
   return $out;
 }
-
