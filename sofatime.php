@@ -139,7 +139,7 @@ function sofatime_shortcode_function($atts, $content = null) {
   
   if(!isset($atts['display-time']) || ($atts['display-time'] != 'no' && $atts['display-time'] != 'false'))
   {
-            $out .= "<span>".$content."</span>\n";
+    $out .= "<span class = 'sofatime-content'>".$content."</span>\n";
   }
   if(!isset($atts['display-24h-toggle']) || ($atts['display-24h-toggle'] != 'no' && $atts['display-24h-toggle'] != 'false'))
   {

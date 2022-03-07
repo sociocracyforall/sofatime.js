@@ -66,22 +66,34 @@ function SofatimeComponent(root, parent) {
 
   this.maxOptionTextLength = 0
   this.boundElements = {
-    is24Checkbox: root.querySelector('.sofatime-checkbox'),
-    optionList: root.querySelector('.sofatime-select'),
+    unformattedContent: root.querySelector('.sofatime-content'),
+    is24Checkbox: root.querySelector('.sofatime-24h-checkbox'),
+    optionList: root.querySelector('.sofatimezone-select'),
     optionListOptions: [],
-    startTimes: root.querySelectorAll('.sofatime-start'),
-    endTimes: root.querySelectorAll('.sofatime-end'),
+    timeStart: document.createElement('div'),
+    timeSeparater: document.createElement('div'),
+    timeEnd: document.createElement('div')
   }
 
-  /* 
+  this.boundElements.unformattedContent.classList.add('hidden')
+  insertBefore(this.boundElements.timeStart, this.boundElements.unformattedContent)
+  insertBefore(this.boundElements.timeSeparater, this.boundElements.unformattedContent)
+  insertBefore(this.boundElements.timeEnd, this.boundElements.unformattedContent)
+  this.boundElements.timeStart.classList.add('sofatime-time-start')
+  this.boundElements.timeSeparater.classList.add('sofatime-time-start')
+  this.boundElements.timeSeparater.innerHTML = "-"
+  this.boundElements.timeEnd.classList.add('sofatime-time-end')
+
+  /*
   if (this.boundElements.optionList) {
     this.createOptionListHtml(this.parent.state.timezones)
   }
   */
   this.addEventListeners()
+  this.timeStrings = this.boundElements.unformattedContent.split("-").map(s => s.trim())
   this.dayjsStartTime = null
   this.dayjsEndTime = null
-  this.setState({ startDatetime: root.dataset.start, endDatetime: root.dataset.end })
+  this.setState({ startDatetime: timeStrings[0], endDatetime: timeStrings[1] })
 }
 
 SofatimeComponent.prototype.createOptionListHtml = function (options) {
@@ -206,7 +218,7 @@ SofatimeComponent.prototype.renderOptionsList = function (stateChange) {
         optionText += ' '
       }
       optionText = optionText.replace(/ /g, '&nbsp;')
-      optionText += '(' + this.dayjsStartTime.tz(timezone).format(format).toUpperCase() + ')'
+      // optionText += '(' + this.dayjsStartTime.tz(timezone).format(format).toUpperCase() + ')'
 
       if (option.innerHTML !== optionText) {
         option.innerHTML = optionText
@@ -240,6 +252,6 @@ SofatimeComponent.prototype.renderDayjsTimes = function (day, els, is24) {
 }
 
 window.addEventListener('load', function () {
-  console.log('body loaded!')
+  console.log('sofatime.js: body loaded!')
   window.sofa = new Sofatime()
 })
