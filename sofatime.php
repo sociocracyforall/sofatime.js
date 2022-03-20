@@ -28,7 +28,9 @@ function sofatime_shortcode_function($atts, $content = null) {
     $GLOBALS['sofatime_id_incrementer']++;
     $sofatimezone_select = '
     <select class="sofatimezone-select">
-        <optgroup label = "UTC"><option value="Etc/UTC">UTC</option></optgroup>
+        <optgroup label = "UTC">
+          <option value="Etc/UTC">UTC</option>
+        </optgroup>
         <optgroup label = "Americas">
             <option value="Pacific/Honolulu">Hawaii Time</option>
             <option value="America/Adak">Alaska - Aleutian Islands - Adak</option>
@@ -62,7 +64,7 @@ function sofatime_shortcode_function($atts, $content = null) {
             <option value="Atlantic/Cape_Verde">Cape Verde Time</option>
             <option value="Atlantic/Azores">Azores Time</option>
         </optgroup>
-        <optgroup label = "Europe" />
+        <optgroup label = "Europe">
             <option value="Europe/Moscow">Russia - Moscow; Belarus - Minsk</option>
             <option value="Europe/Athens">Eastern European Time</option>
             <option value="Europe/Chisinau">Moldova - Chisinau</option>
@@ -131,7 +133,7 @@ function sofatime_shortcode_function($atts, $content = null) {
   {
     if(preg_match("/^[a-zA-Z0-9_\-]+$/",$key))
     {
-      $out .= ' data-'.strtolower($key).'="'.htmlspecialchars($value).'"';
+      $out .= ' data-'.strtolower($key).'="'.preg_replace("/^[a-zA-Z0-9_\-]/","",$value).'"';
     }
   }
   
