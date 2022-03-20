@@ -1,4 +1,4 @@
-function Sofatime(is24, timezone, root = document) {
+function Sofatime(root = document) {
   dayjs.extend(window.dayjs_plugin_utc)
   dayjs.extend(window.dayjs_plugin_timezone)
   this.root = root
@@ -22,7 +22,6 @@ function Sofatime(is24, timezone, root = document) {
   )
   //Set the initial state.
   this.setState(this.getLocale())
-  this.setState({ timezones: timezones })
 }
 
 Sofatime.prototype.getLocale = function () {
@@ -72,7 +71,7 @@ function SofatimeComponent(root, parent) {
     timezoneSelect: root.querySelector('.sofatimezone-select'),
   }
 
-  if(this.boundElements.rawUserInput) {
+  if (this.boundElements.rawUserInput) {
     this.boundElements.rawUserInput.classList.add('hidden')
     this.boundElements.timeStart = document.createElement('div')
     this.boundElements.timeSeparater = document.createElement('div')
@@ -82,8 +81,26 @@ function SofatimeComponent(root, parent) {
     this.root.appendChild(this.boundElements.timeEnd)
     this.boundElements.timeStart.classList.add('time-start')
     this.boundElements.timeSeparater.classList.add('time-separater')
-    this.boundElements.timeSeparater.innerHTML = "-"
+    this.boundElements.timeSeparater.innerHTML = '-'
     this.boundElements.timeEnd.classList.add('time-end')
+
+    const rawTimeStrings = this.boundElements.rawUserInput.textContent.split(' - ')
+    const parsedTimeStrings = []
+    if (rawTimeStrings.length > 2) {
+      this.errors.push("Could not parse start and end times: more than one '-' character")
+    } else {
+      parsedTimeStrings.push(...rawTimeStrings.map((string) => this.parseInputText(string)))
+      if (!parsedTimeStrings[0][0]) this.errors.push('Could not understand start time')
+      if (!parsedTimeStrings[0][1]) this.errors.push('Could not understand start timezone')
+      if (parsedTimeStrings[1] && !parsedTimeStrings[1][0]) this.errors.push('Could not understand end time')
+      if (parsedTimeStrings[1] && !parsedTimeStrings[1][1]) this.errors.push('Could not understand end timezone')
+    }
+
+    if (!this.errors.length) {
+      this.dayjsStartTime = dayjs.tz(...parsedTimeStrings[0])
+      if (parsedTimeStrings[1]) this.dayjsEndTime = dayjs.tz(...parsedTimeStrings[1])
+      this.setState({ startDatetime: parsedTimeStrings[0], endDatetime: parsedTimeStrings[1] })
+    }
   }
 
   /*
@@ -93,27 +110,8 @@ function SofatimeComponent(root, parent) {
   */
   this.addEventListeners()
 
-  const rawTimeStrings = this.boundElements.rawUserInput.textContent.split(" - ")
-  if(rawTimeStrings.length > 2) {
-    this.errors.push("Could not parse start and end times: more than one '-' character")
-  } else {
-    const parsedTimeStrings = rawTimeStrings.map(string => parseInputText(string))
-    if(!parsedTimeStrings[0][0]) this.errors.push("Could not understand start time")
-    if(!parsedTimeStrings[0][1]) this.errors.push("Could not understand start timezone")
-    if(parsedTimeStrings[1] && !parsedTimeStrings[1][0]) this.errors.push("Could not understand end time")
-    if(parsedTimeStrings[1] && !parsedTimeStrings[1][1]) this.errors.push("Could not understand end timezone")
-  }
-
-  if(!this.errors.length) {
-    this.dayjsStartTime = dayjs.tz(...parsedTimeStrings[0])
-    if(parsedTimeStrings[1]) this.dayjsEndTime = dayjs.tz(...parsedTimeStrings[1])
-  }
-
-
-
-  this.dayjsStartTime = null
-  this.dayjsEndTime = null
-  this.setState({ startDatetime: timeStrings[0], endDatetime: timeStrings[1] })
+  //  this.dayjsStartTime = null
+  //  this.dayjsEndTime = null
 }
 
 // SofatimeComponent.prototype.createOptionListHtml = function (options) {
@@ -165,42 +163,41 @@ SofatimeComponent.prototype.addEventListeners = function () {
   }
 }
 
-SofatimeComponent.prototype.parseInputText = function(text) {
+SofatimeComponent.prototype.parseInputText = function (text) {
   const altTZnames = {
-    eastern: "America/New_York",
-    central: "America/Chicago",
-    mountain: "America/Denver",
-    pacific: "America/Los_Angeles"
+    eastern: 'America/New_York',
+    central: 'America/Chicago',
+    mountain: 'America/Denver',
+    pacific: 'America/Los_Angeles',
   }
 
-  const dateMatches = text.match(/\d{4}-\d{2}-\d{2}(T| )\d{2}:\d{2}/g);
+  const dateMatches = text.match(/\d{4}-\d{2}-\d{2}(T| )\d{2}:\d{2}/g)
 
   // get the first part of the input, which should be a valid ISO datestring
   let validDate = false
-  if ( dateMatches && dateMatches.length == 1 && dayjs(dateMatches[0]).isValid() ) {
+  if (dateMatches && dateMatches.length == 1 && dayjs(dateMatches[0]).isValid()) {
     validDate = dateMatches[0]
   }
 
   // get the second part of the input, which should be the timezone
-  let timezone = text.replace(dateMatches[0],"").trim();
-  if( timezone.match(/^z(ulu)?$/i) ) timezone = "Etc/UTC";
-    else timezone = timezone.replace(/^z/i,"").trim();
+  let timezone = text.replace(dateMatches[0], '').trim()
+  if (timezone.match(/^z(ulu)?$/i)) timezone = 'Etc/UTC'
+  else timezone = timezone.replace(/^z/i, '').trim()
   timezone = altTZnames[timezone.toLowerCase()] || timezone
 
-  return [validDate, isValidTimeZone(timezone) && timezone]
+  return [validDate, this.isValidTimeZone(timezone) && timezone]
 }
 
-SofatimeComponent.prototype.isValidTimeZone = function(tz) {
+SofatimeComponent.prototype.isValidTimeZone = function (tz) {
   if (!Intl || !Intl.DateTimeFormat().resolvedOptions().timeZone) {
-      throw 'Time zones are not available in this environment';
+    throw 'Time zones are not available in this environment'
   }
 
   try {
-      Intl.DateTimeFormat(undefined, {timeZone: tz});
-      return true;
-  }
-  catch (ex) {
-      return false;
+    Intl.DateTimeFormat(undefined, { timeZone: tz })
+    return true
+  } catch (ex) {
+    return false
   }
 }
 
@@ -217,7 +214,6 @@ SofatimeComponent.prototype.setState = function (state) {
     }
   }
 
-
   //Start and end times do not change
 
   //If there is a start time and it has changed, update the components dayjs object
@@ -233,22 +229,24 @@ SofatimeComponent.prototype.setState = function (state) {
   if (state && state.error !== undefined) this.state.error = state.error
   this.state = state
   this.render(stateChange)
+
 }
 
 SofatimeComponent.prototype.render = function (stateChange) {
   if (this.state.error) {
+    //@TODO Render errors in the html
     console.log(this.state.error)
     return
   }
 
   //If the timezone list changes, re-generate timezone option list html
   // if (stateChange.timezones) {
-    // this.createOptionListHtml(this.parent.state.timezones)
+  // this.createOptionListHtml(this.parent.state.timezones)
   // }
 
   //If the timezone changes, select the appropriate timezone option
-  if(stateChange.timezone && this.boundElements.timezoneSelect) {
-    this.boundElements.timezoneSelect.value = this.state.timezone
+  if (stateChange.timezone && this.boundElements.timezoneSelect) {
+    this.boundElements.timezoneSelect.value = this.parent.state.timezone
   }
 
   //Update the checkbox to ensure it matches the global 24 hour state
@@ -257,11 +255,11 @@ SofatimeComponent.prototype.render = function (stateChange) {
   }
 
   //Render the start & end datetimes
-  if ((stateChange.timezone || stateChange.is24) && this.boundElements.timeStart) {
-    this.boundElements.timeStart.innerHTML = renderTime(this.dayjsStartTime, this.state.timezone, this.state.is24)
+  if ((stateChange.timezone || stateChange.is24 !== undefined) && this.boundElements.timeStart && this.dayjsStartTime) {
+    this.boundElements.timeStart.innerHTML = this.renderTime(this.dayjsStartTime, this.parent.state.timezone, this.parent.state.is24)
   }
-  if ((stateChange.timezone || stateChange.is24) && this.boundElements.timeEnd) {
-    this.boundElements.timeEnd.innerHTML = renderTime(this.dayjsEndTime, this.state.timezone, this.state.is24)
+  if ((stateChange.timezone || stateChange.is24 !== undefined) && this.boundElements.timeEnd && this.dayjsEndTime) {
+    this.boundElements.timeEnd.innerHTML = this.renderTime(this.dayjsEndTime, this.parent.state.timezone, this.parent.state.is24)
   }
 
   //Render the option list
@@ -271,9 +269,8 @@ SofatimeComponent.prototype.render = function (stateChange) {
 }
 
 SofatimeComponent.prototype.renderTime = function (day, timezone, is24) {
-  day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h a'} mm${is24 ? ' a' :''}`)
+  return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? ' a' : ''}`)
 }
-
 
 // SofatimeComponent.prototype.renderOptionsList = function (stateChange) {
 //   if (!this.boundElements.timezoneSelect) return
@@ -299,10 +296,10 @@ SofatimeComponent.prototype.renderTime = function (day, timezone, is24) {
 //     }
 //   }
 
-  //If the timezone has changed ensure that the selected option matches
-  // if (stateChange.timezone) {
-  //   this.boundElements.timezoneSelect.value = this.parent.state.timezone
-  // }
+//If the timezone has changed ensure that the selected option matches
+// if (stateChange.timezone) {
+//   this.boundElements.timezoneSelect.value = this.parent.state.timezone
+// }
 // }
 // SofatimeComponent.prototype.renderDayjsTimes = function (day, els, is24) {
 //   if (!day || !els.length) return
