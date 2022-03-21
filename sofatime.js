@@ -71,6 +71,8 @@ function SofatimeComponent(root, parent) {
     timezoneSelect: root.querySelector('.sofatimezone-select'),
   }
 
+  this.settings = root.dataset
+
   if (this.boundElements.rawUserInput) {
     this.boundElements.rawUserInput.classList.add('hidden')
     this.boundElements.timeStart = document.createElement('div')
@@ -256,10 +258,10 @@ SofatimeComponent.prototype.render = function (stateChange) {
 
   //Render the start & end datetimes
   if ((stateChange.timezone || stateChange.is24 !== undefined) && this.boundElements.timeStart && this.dayjsStartTime) {
-    this.boundElements.timeStart.innerHTML = this.renderTime(this.dayjsStartTime, this.parent.state.timezone, this.parent.state.is24)
+    this.boundElements.timeStart.innerHTML = this.renderTime(this.dayjsStartTime, this.parent.state.timezone, this.parent.state.is24, this.settings.format)
   }
   if ((stateChange.timezone || stateChange.is24 !== undefined) && this.boundElements.timeEnd && this.dayjsEndTime) {
-    this.boundElements.timeEnd.innerHTML = this.renderTime(this.dayjsEndTime, this.parent.state.timezone, this.parent.state.is24)
+    this.boundElements.timeEnd.innerHTML = this.renderTime(this.dayjsEndTime, this.parent.state.timezone, this.parent.state.is24, this.settings.format)
   }
 
   //Render the option list
@@ -268,7 +270,8 @@ SofatimeComponent.prototype.render = function (stateChange) {
   // }
 }
 
-SofatimeComponent.prototype.renderTime = function (day, timezone, is24) {
+SofatimeComponent.prototype.renderTime = function (day, timezone, is24, format = null) {
+  if(format) return day.tz(timezone).format(format);
   return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? ' a' : ''}`)
 }
 
