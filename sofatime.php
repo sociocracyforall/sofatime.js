@@ -133,7 +133,7 @@ function sofatime_shortcode_function($atts, $content = null) {
   {
     if(preg_match("/^[a-zA-Z0-9_\-]+$/",$key))
     {
-      $out .= ' data-'.strtolower($key).'="'.preg_replace("/^[a-zA-Z0-9_\-]/","",$value).'"';
+      $out .= ' data-'.strtolower($key).'="'.preg_replace("/[^a-zA-Z0-9_\-]/","",$value).'"';
     }
   }
   
