@@ -1,7 +1,12 @@
 .sofatime {
-  /*display: flex;*/
+  display: flex;
+  flex-wrap: wrap;
   /*justify-content: center;*/
   /*align-items: center;*/
+}
+
+.sofatime div:nth-of-type(3) {
+  flex-basis: 100%;
 }
 
 .sofatime span {
@@ -10,11 +15,23 @@
   min-width: 16ch;
 }
 
+.sofatime .hidden { display: none; }
+
+.sofatime .times {
+  display: flex;
+  white-space: nowrap;
+}
+
+.sofatime .times div {
+  flex-wrap: nowrap;
+  margin: 0.25em;
+}
+
 .sofatime-error {
   background-color: #ffdddd;
 }
 .sofatime-error .sofatime-select-wrapper, .sofatime-error .sofatime-24h-wrapper {
-  display: none;
+  /* display: none; */
 }
 
 .sofatimezone-select {

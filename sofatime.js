@@ -75,16 +75,19 @@ function SofatimeComponent(root, parent) {
 
   if (this.boundElements.rawUserInput) {
     this.boundElements.rawUserInput.classList.add('hidden')
+    this.boundElements.timeBoxes = document.createElement('div')
+    this.boundElements.timeBoxes.classList.add('times')
+    this.root.appendChild(this.boundElements.timeBoxes)
     this.boundElements.timeStart = document.createElement('div')
     this.boundElements.timeSeparater = document.createElement('div')
     this.boundElements.timeEnd = document.createElement('div')
-    this.root.appendChild(this.boundElements.timeStart)
-    this.root.appendChild(this.boundElements.timeSeparater)
-    this.root.appendChild(this.boundElements.timeEnd)
-    this.boundElements.timeStart.classList.add('time-start')
-    this.boundElements.timeSeparater.classList.add('time-separater')
+    this.boundElements.timeBoxes.appendChild(this.boundElements.timeStart)
+    this.boundElements.timeBoxes.appendChild(this.boundElements.timeSeparater)
+    this.boundElements.timeBoxes.appendChild(this.boundElements.timeEnd)
+    this.boundElements.timeStart.classList.add('time-start', 'time')
+    this.boundElements.timeSeparater.classList.add('time-separater', 'hidden')
     this.boundElements.timeSeparater.innerHTML = '-'
-    this.boundElements.timeEnd.classList.add('time-end')
+    this.boundElements.timeEnd.classList.add('time-end', 'time', 'hidden')
 
     const rawTimeStrings = this.boundElements.rawUserInput.textContent.split(' - ')
     const parsedTimeStrings = []
@@ -100,7 +103,11 @@ function SofatimeComponent(root, parent) {
 
     if (!this.errors.length) {
       this.dayjsStartTime = dayjs.tz(...parsedTimeStrings[0])
-      if (parsedTimeStrings[1]) this.dayjsEndTime = dayjs.tz(...parsedTimeStrings[1])
+      if (parsedTimeStrings[1]) {
+        this.dayjsEndTime = dayjs.tz(...parsedTimeStrings[1])
+        this.boundElements.timeSeparater.classList.remove("hidden")
+        this.boundElements.timeEnd.classList.remove("hidden")
+      }
       this.setState({ startDatetime: parsedTimeStrings[0], endDatetime: parsedTimeStrings[1] })
     }
   }
@@ -272,7 +279,7 @@ SofatimeComponent.prototype.render = function (stateChange) {
 
 SofatimeComponent.prototype.renderTime = function (day, timezone, is24, format = null) {
   if(format) return day.tz(timezone).format(format);
-  return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? ' a' : ''}`)
+  return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? '' : ' a'}`)
 }
 
 // SofatimeComponent.prototype.renderOptionsList = function (stateChange) {
