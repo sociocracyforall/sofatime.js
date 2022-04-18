@@ -3,7 +3,8 @@
  * Plugin Name: SoFA Time
  * Description: Uses a shortcode to identify time and date strings and change them to the client's local timezone.
  * Author: SociocracyFoAll, Vernon Coffey
- * Version: 0.7111
+ * Author: Vernon Coffey
+ * Version: 0.8
  */
 
 $sofatime_id_incrementer = 0;
@@ -144,7 +145,7 @@ function sofatime_shortcode_function($atts, $content = null) {
   
   if(!isset($atts['display-time']) || ($atts['display-time'] != 'no' && $atts['display-time'] != 'false'))
   {
-    $out .= "<span class = 'raw-user-input'>".$content."</span>\n";
+    $out .= "<span class = 'raw-user-input'>".htmlspecialchars($content)."</span>\n";
   }
   if(!isset($atts['display-24h-toggle']) || ($atts['display-24h-toggle'] != 'no' && $atts['display-24h-toggle'] != 'false'))
   {
