@@ -2,17 +2,18 @@
 /**
  * Plugin Name: SoFA Time
  * Description: Uses a shortcode to identify time and date strings and change them to the client's local timezone.
- * Author: Vernon Coffey
- * Version: 0.7
+ * Author: SociocracyFoAll, Vernon Coffey
+ * Version: 0.7111
  */
 
 $sofatime_id_incrementer = 0;
 
+
+add_action('wp_enqueue_scripts', 'sofatime_script_enqueue');
 wp_register_script('dayjs', plugin_dir_url(__FILE__)."dayjs-1.9.5/dayjs.min.js", array(), '1.9.5');
 wp_register_script('dayjs-utc', plugin_dir_url(__FILE__)."dayjs-1.9.5/plugin/utc.min.js", array('dayjs'), '1.9.5');
 wp_register_script('dayjs-tz', plugin_dir_url(__FILE__)."dayjs-1.9.5/plugin/timezone.min.js", array('dayjs'), '1.9.5');
 
-add_action('wp_enqueue_scripts', 'sofatime_script_enqueue');
 add_action( 'init', 'sofatime_register_shortcodes');
 
 function sofatime_script_enqueue() {
