@@ -4,7 +4,7 @@
  * Description: Uses a shortcode to identify time and date strings and change them to the client's local timezone.
  * Author: SociocracyFoAll, Vernon Coffey
  * Author: Vernon Coffey
- * Version: 0.8
+ * Version: 0.801
  */
 
 $sofatime_id_incrementer = 0;
@@ -14,13 +14,14 @@ add_action('wp_enqueue_scripts', 'sofatime_script_enqueue');
 wp_register_script('dayjs', plugin_dir_url(__FILE__)."dayjs-1.9.5/dayjs.min.js", array(), '1.9.5');
 wp_register_script('dayjs-utc', plugin_dir_url(__FILE__)."dayjs-1.9.5/plugin/utc.min.js", array('dayjs'), '1.9.5');
 wp_register_script('dayjs-tz', plugin_dir_url(__FILE__)."dayjs-1.9.5/plugin/timezone.min.js", array('dayjs'), '1.9.5');
+wp_register_script('dayjs-localizedFormat', plugin_dir_url(__FILE__)."dayjs-1.9.5/plugin/localizedFormat.js", array('dayjs'), '1.9.5');
 
 add_action( 'init', 'sofatime_register_shortcodes');
 
 function sofatime_script_enqueue() {
   wp_enqueue_script('jquery');
   $dir_url = plugin_dir_url(__FILE__);
-  wp_enqueue_script('sofatime', $dir_url."sofatime.js", array('dayjs-utc','dayjs-tz'), filemtime($dir_url."sofatime.js"));
+  wp_enqueue_script('sofatime', $dir_url."sofatime.js", array('dayjs-utc','dayjs-tz','dayjs-localizedFormat'), filemtime($dir_url."sofatime.js"));
   wp_enqueue_style('sofatime-css', $dir_url."sofatime.css", array(), filemtime($dir_url."sofatime.css"));
 }
 
@@ -130,8 +131,8 @@ function sofatime_shortcode_function($atts, $content = null) {
     </select>
   ';
 
-  
-  
+
+
   $out = '<div class="sofatime"';
   foreach($atts as $key => $value)
   {
@@ -140,21 +141,21 @@ function sofatime_shortcode_function($atts, $content = null) {
       $out .= ' data-'.strtolower($key).'="'.preg_replace("/[^a-zA-Z0-9_\-]/","",$value).'"';
     }
   }
-  
+
   $out .= ">\n";
-  
+
   if(!isset($atts['display-time']) || ($atts['display-time'] != 'no' && $atts['display-time'] != 'false'))
   {
     $out .= "<span class = 'raw-user-input'>".htmlspecialchars($content)."</span>\n";
   }
-  if(!isset($atts['display-24h-toggle']) || ($atts['display-24h-toggle'] != 'no' && $atts['display-24h-toggle'] != 'false'))
-  {
-    $out .= '<div class="sofatime-24h-wrapper">
-      <input type="checkbox" class="sofatime-24h-checkbox" id="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">
-      <label class="sofatime-24h-label" for="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">24h</label>
-      <p>24h</p>
-    </div>';
-  }
+  // if(!isset($atts['display-24h-toggle']) || ($atts['display-24h-toggle'] != 'no' && $atts['display-24h-toggle'] != 'false'))
+  // {
+  //   $out .= '<div class="sofatime-24h-wrapper">
+  //     <input type="checkbox" class="sofatime-24h-checkbox" id="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">
+  //     <label class="sofatime-24h-label" for="sofatime-24h-'.$GLOBALS['sofatime_id_incrementer'].'">24h</label>
+  //     <p>24h</p>
+  //   </div>';
+  // }
   if(!isset($atts['display-select']) || ($atts['display-select'] != 'no' && $atts['display-select'] != 'false'))
   {
     $out .= "<div class=\"sofatime-select-wrapper\">".$sofatimezone_select."</div>\n";

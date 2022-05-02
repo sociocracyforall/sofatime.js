@@ -1,6 +1,7 @@
 function Sofatime(root = document) {
   dayjs.extend(window.dayjs_plugin_utc)
   dayjs.extend(window.dayjs_plugin_timezone)
+  dayjs.extend(window.dayjs_plugin_localizedFormat)
   this.root = root
   this.children = []
   // var timezones = [
@@ -278,8 +279,10 @@ SofatimeComponent.prototype.render = function (stateChange) {
 }
 
 SofatimeComponent.prototype.renderTime = function (day, timezone, is24, format = null) {
-  if(format) return day.tz(timezone).format(format);
-  return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? '' : ' a'}`)
+  // if(format) return day.tz(timezone).format(format);
+  // return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? '' : ' a'}`)
+  // return day.tz(timezone).toDate().toLocaleString()
+  return day.tz(timezone).format('llll')
 }
 
 // SofatimeComponent.prototype.renderOptionsList = function (stateChange) {
