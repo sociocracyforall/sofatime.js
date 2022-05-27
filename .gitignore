@@ -1,3 +1,14 @@
 *.swp
 .idea
 site/*
+
+# Yarn-specific entries (where we're not using Zero-Install;
+# see <https://yarnpkg.com/features/zero-installs> for more information):
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+

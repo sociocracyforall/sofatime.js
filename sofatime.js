@@ -1,7 +1,13 @@
-function Sofatime(root = document) {
-  dayjs.extend(window.dayjs_plugin_utc)
-  dayjs.extend(window.dayjs_plugin_timezone)
-  dayjs.extend(window.dayjs_plugin_localizedFormat)
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(localizedFormat);
+
+export default function Sofatime(root = document) {
   this.root = root
   this.children = []
   // var timezones = [
@@ -333,8 +339,3 @@ SofatimeComponent.prototype.renderTime = function (day, timezone, is24, format =
 //     }
 //   }
 // }
-
-window.addEventListener('load', function () {
-  console.log('sofatime.js loaded!')
-  window.sofa = new Sofatime()
-})
