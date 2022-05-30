@@ -4,7 +4,7 @@
  * Description: Uses a shortcode to identify time and date strings and change them to the client's local timezone.
  * Author: SociocracyForAll, Vernon Coffey
  * Author: Vernon Coffey
- * Version: 0.811
+ * Version: 0.812
  */
 
 $sofatime_id_incrementer = 0;

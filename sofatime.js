@@ -279,7 +279,10 @@ SofatimeComponent.prototype.render = function (stateChange) {
 }
 
 SofatimeComponent.prototype.renderTime = function (day, timezone, is24, format = null) {
-  if(format == 'tolocaleString') { return day.tz(timezone).toDate().toLocaleString() }
+  if(format == 'toLocaleString') {
+    const options = { month: "long", day: "numeric", hour: "numeric", minute: "numeric" }
+    return day.tz(timezone).toDate().toLocaleString(undefined, options)
+  }
   if(format) { return day.tz(timezone).format(format) }
   return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? '' : ' a'}`)
 }
