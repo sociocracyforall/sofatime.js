@@ -1,0 +1,25 @@
+{
+  "rootpattern": [
+    {
+      "element": "optgroup",
+      "key": "categories",
+      "attributes": "label",
+      "children": [
+        {
+          "element": "option",
+          "key": "options",
+          "attributes": {
+            "timezoneName": "value"
+          },
+          "children": [
+            {
+              "text": true,
+              "key": "timezoneLabel"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

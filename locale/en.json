@@ -1,0 +1,362 @@
+{
+  "project": "sofatime",
+  "languageCode": "en",
+  "categories": [
+    {
+      "label": "UTC",
+      "options": [
+        {
+          "timezoneName": "Etc/UTC",
+          "timezoneLabel": "UTC"
+        }
+      ]
+    },
+    {
+      "label": "Americas",
+      "options": [
+        {
+          "timezoneName": "Pacific/Honolulu",
+          "timezoneLabel": "Hawaii Time"
+        },
+        {
+          "timezoneName": "America/Adak",
+          "timezoneLabel": "Alaska – Aleutian Islands – Adak"
+        },
+        {
+          "timezoneName": "America/Juneau",
+          "timezoneLabel": "Alaska Time"
+        },
+        {
+          "timezoneName": "America/Los_Angeles",
+          "timezoneLabel": "Pacific Time – US, Canada, Mexico"
+        },
+        {
+          "timezoneName": "America/Phoenix",
+          "timezoneLabel": "US – Arizona; Canada – Yukon; Mexico – Sonora"
+        },
+        {
+          "timezoneName": "America/Mazatlan",
+          "timezoneLabel": "Mexico – Mazatlan; Chihuahua"
+        },
+        {
+          "timezoneName": "America/Denver",
+          "timezoneLabel": "Mountain Time – US & Canada"
+        },
+        {
+          "timezoneName": "America/Costa_Rica",
+          "timezoneLabel": "Central Standard Time (Central America)"
+        },
+        {
+          "timezoneName": "America/Regina",
+          "timezoneLabel": "Canada – Saskatchewan – Regina"
+        },
+        {
+          "timezoneName": "America/Mexico_City",
+          "timezoneLabel": "Mexico City"
+        },
+        {
+          "timezoneName": "America/Chicago",
+          "timezoneLabel": "Central Time – US & Canada; Mexico – Matamoros"
+        },
+        {
+          "timezoneName": "America/Bogota",
+          "timezoneLabel": "Panama; Colombia; Ecuador; Peru; Jamaica; Mexico – Cancun"
+        },
+        {
+          "timezoneName": "America/Rio_Branco",
+          "timezoneLabel": "Brazil – Acre (Rio Branco)"
+        },
+        {
+          "timezoneName": "America/New_York",
+          "timezoneLabel": "Eastern Time – US & Canada"
+        },
+        {
+          "timezoneName": "America/Havana",
+          "timezoneLabel": "Cuba – Havana"
+        },
+        {
+          "timezoneName": "America/Manaus",
+          "timezoneLabel": "Amazon Time (Brazil)"
+        },
+        {
+          "timezoneName": "America/Port_of_Spain",
+          "timezoneLabel": "Atlantic Standard Time (Caribbean)"
+        },
+        {
+          "timezoneName": "America/Caracas",
+          "timezoneLabel": "Bolivia; Venezuela"
+        },
+        {
+          "timezoneName": "America/Santiago",
+          "timezoneLabel": "Chile – Santiago"
+        },
+        {
+          "timezoneName": "America/Halifax",
+          "timezoneLabel": "Canada – Halifax, Moncton; Bermuda"
+        },
+        {
+          "timezoneName": "America/Asuncion",
+          "timezoneLabel": "Paraguay – Asunción"
+        },
+        {
+          "timezoneName": "America/St_Johns",
+          "timezoneLabel": "Canada – Newfoundland – St Johns"
+        },
+        {
+          "timezoneName": "America/Argentina/Buenos_Aires",
+          "timezoneLabel": "Argentina – Buenos Aires"
+        },
+        {
+          "timezoneName": "America/Sao_Paulo",
+          "timezoneLabel": "Brazil – Brasilia; São Paulo"
+        },
+        {
+          "timezoneName": "America/Nuuk",
+          "timezoneLabel": "Greenland – Nuuk"
+        },
+        {
+          "timezoneName": "America/Miquelon",
+          "timezoneLabel": "Saint Pierre and Miquelon"
+        },
+        {
+          "timezoneName": "America/Noronha",
+          "timezoneLabel": "Atlantic Islands – Noronha"
+        }
+      ]
+    },
+    {
+      "label": "Atlantic",
+      "options": [
+        {
+          "timezoneName": "Atlantic/Cape_Verde",
+          "timezoneLabel": "Cape Verde Time"
+        },
+        {
+          "timezoneName": "Atlantic/Azores",
+          "timezoneLabel": "Azores Time"
+        }
+      ]
+    },
+    {
+      "label": "Europe",
+      "options": [
+        {
+          "timezoneName": "Europe/Moscow",
+          "timezoneLabel": "Russia – Moscow; Belarus – Minsk"
+        },
+        {
+          "timezoneName": "Europe/Athens",
+          "timezoneLabel": "Eastern European Time"
+        },
+        {
+          "timezoneName": "Europe/Chisinau",
+          "timezoneLabel": "Moldova – Chisinau"
+        },
+        {
+          "timezoneName": "Europe/Berlin",
+          "timezoneLabel": "Central European Time"
+        },
+        {
+          "timezoneName": "Europe/Lisbon",
+          "timezoneLabel": "Western European Time – UK, Ireland, Portugal"
+        }
+      ]
+    },
+    {
+      "label": "Africa",
+      "options": [
+        {
+          "timezoneName": "Africa/Nairobi",
+          "timezoneLabel": "East Africa Time"
+        },
+        {
+          "timezoneName": "Africa/Maputo",
+          "timezoneLabel": "Central Africa Time"
+        },
+        {
+          "timezoneName": "Africa/Lagos",
+          "timezoneLabel": "West Africa Time"
+        },
+        {
+          "timezoneName": "Africa/Casablanca",
+          "timezoneLabel": "Morocco, Western Sahara"
+        },
+        {
+          "timezoneName": "Africa/Abidjan",
+          "timezoneLabel": "GMT – Abidjan; Accra; Bissau"
+        }
+      ]
+    },
+    {
+      "label": "Asia",
+      "options": [
+        {
+          "timezoneName": "Asia/Vladivostok",
+          "timezoneLabel": "Russia – Vladivostok"
+        },
+        {
+          "timezoneName": "Asia/Tokyo",
+          "timezoneLabel": "Japan; Korea; Russia – Yakutsk"
+        },
+        {
+          "timezoneName": "Asia/Shanghai",
+          "timezoneLabel": "China; Singapore; Russia – Irkutsk"
+        },
+        {
+          "timezoneName": "Asia/Bangkok",
+          "timezoneLabel": "Indochina; Russia – Krasnoyarsk"
+        },
+        {
+          "timezoneName": "Asia/Yangon",
+          "timezoneLabel": "Myanmar Standard Time"
+        },
+        {
+          "timezoneName": "Asia/Dhaka",
+          "timezoneLabel": "Bangladesh; Russia – Omsk"
+        },
+        {
+          "timezoneName": "Asia/Kathmandu",
+          "timezoneLabel": "Nepal – Kathmandu"
+        },
+        {
+          "timezoneName": "Asia/Kolkata",
+          "timezoneLabel": "India; Sri Lanka"
+        },
+        {
+          "timezoneName": "Asia/Karachi",
+          "timezoneLabel": "Pakistan; Maldives; Russia – Yekaterinburg"
+        },
+        {
+          "timezoneName": "Asia/Kabul",
+          "timezoneLabel": "Afghanistan – Kabul"
+        },
+        {
+          "timezoneName": "Asia/Baku",
+          "timezoneLabel": "Armenia; Azerbaijan; UAE"
+        },
+        {
+          "timezoneName": "Asia/Tehran",
+          "timezoneLabel": "Iran – Tehran"
+        },
+        {
+          "timezoneName": "Asia/Baghdad",
+          "timezoneLabel": "Arabia Standard Time"
+        },
+        {
+          "timezoneName": "Asia/Gaza",
+          "timezoneLabel": "Palestine – Gaza; West Bank"
+        },
+        {
+          "timezoneName": "Asia/Jerusalem",
+          "timezoneLabel": "Israel – Jerusalem"
+        },
+        {
+          "timezoneName": "Asia/Beirut",
+          "timezoneLabel": "Lebanon – Beirut"
+        },
+        {
+          "timezoneName": "Asia/Damascus",
+          "timezoneLabel": "Syria – Damascus"
+        },
+        {
+          "timezoneName": "Asia/Amman",
+          "timezoneLabel": "Jordan – Amman"
+        }
+      ]
+    },
+    {
+      "label": "Australia",
+      "options": [
+        {
+          "timezoneName": "Australia/Lord_Howe",
+          "timezoneLabel": "Australia – Lord_Howe"
+        },
+        {
+          "timezoneName": "Australia/Sydney",
+          "timezoneLabel": "Australia – Sydney; Melbourne"
+        },
+        {
+          "timezoneName": "Australia/Brisbane",
+          "timezoneLabel": "Australia – Brisbane"
+        },
+        {
+          "timezoneName": "Australia/Adelaide",
+          "timezoneLabel": "Australia – Adelaide"
+        },
+        {
+          "timezoneName": "Australia/Darwin",
+          "timezoneLabel": "Australia – Darwin"
+        },
+        {
+          "timezoneName": "Australia/Eucla",
+          "timezoneLabel": "Australia – Eucla"
+        },
+        {
+          "timezoneName": "Australia/Perth",
+          "timezoneLabel": "Australia – Perth"
+        }
+      ]
+    },
+    {
+      "label": "Pacific",
+      "options": [
+        {
+          "timezoneName": "Pacific/Pago_Pago",
+          "timezoneLabel": "Pago Pago; Midway Island"
+        },
+        {
+          "timezoneName": "Pacific/Marquesas",
+          "timezoneLabel": "Marquesas"
+        },
+        {
+          "timezoneName": "Pacific/Gambier",
+          "timezoneLabel": "Gambier"
+        },
+        {
+          "timezoneName": "Pacific/Pitcairn",
+          "timezoneLabel": "Pitcairn Island"
+        },
+        {
+          "timezoneName": "Pacific/Easter",
+          "timezoneLabel": "Easter Island"
+        },
+        {
+          "timezoneName": "Pacific/Kiritimati",
+          "timezoneLabel": "Kiritimati"
+        },
+        {
+          "timezoneName": "Pacific/Apia",
+          "timezoneLabel": "Samoa – Apia"
+        },
+        {
+          "timezoneName": "Pacific/Tongatapu",
+          "timezoneLabel": "Tonga – Tongatapu"
+        },
+        {
+          "timezoneName": "Pacific/Chatham",
+          "timezoneLabel": "New Zealand – Chatham"
+        },
+        {
+          "timezoneName": "Pacific/Auckland",
+          "timezoneLabel": "New Zealand – Aukland"
+        },
+        {
+          "timezoneName": "Pacific/Fiji",
+          "timezoneLabel": "Fiji"
+        },
+        {
+          "timezoneName": "Pacific/Majuro",
+          "timezoneLabel": "Marshall Islands; Gilbert Islands"
+        },
+        {
+          "timezoneName": "Pacific/Norfolk",
+          "timezoneLabel": "Norfolk Island"
+        },
+        {
+          "timezoneName": "Pacific/Noumea",
+          "timezoneLabel": "New Caledonia – Noumea"
+        }
+      ]
+    }
+  ]
+}

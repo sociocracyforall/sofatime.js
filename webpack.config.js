@@ -11,6 +11,13 @@ module.exports = {
         type: 'umd',
       },
     },
+    jsontemplate: {
+      import: './template.js',
+      library: {
+        name: 'jsontemplate',
+        type: 'umd',
+      },
+    },
     demo: './demo.js',
   },
   output: {
