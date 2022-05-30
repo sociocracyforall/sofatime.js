@@ -279,10 +279,9 @@ SofatimeComponent.prototype.render = function (stateChange) {
 }
 
 SofatimeComponent.prototype.renderTime = function (day, timezone, is24, format = null) {
-  // if(format) return day.tz(timezone).format(format);
-  // return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? '' : ' a'}`)
-  // return day.tz(timezone).toDate().toLocaleString()
-  return day.tz(timezone).format('llll')
+  if(format == 'tolocaleString') { return day.tz(timezone).toDate().toLocaleString() }
+  if(format) { return day.tz(timezone).format(format) }
+  return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? '' : ' a'}`)
 }
 
 // SofatimeComponent.prototype.renderOptionsList = function (stateChange) {
