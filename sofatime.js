@@ -302,7 +302,6 @@ SofatimeComponent.prototype.renderTime = function (day, timezone, is24, format =
       && Array.isArray(window.navigator.languages)
       && window.navigator.languages.length > 0) {
     lang = window.navigator.languages[0].substr(0, 2);
-    console.log(lang);
     require(`dayjs/locale/${lang}.js`);
   }
 
