@@ -285,12 +285,36 @@ SofatimeComponent.prototype.render = function (stateChange) {
 }
 
 SofatimeComponent.prototype.renderTime = function (day, timezone, is24, format = null) {
+  let lang = 'en';
+
+  const document = this.root.ownerDocument;
+  const window = (
+    document !== undefined
+    ? (
+        document.parentWindow !== undefined
+        ? document.parentWindow
+        : document.defaultView
+    )
+    : undefined
+  );
+
+  if (window !== undefined && window.navigator !== undefined
+      && Array.isArray(window.navigator.languages)
+      && window.navigator.languages.length > 0) {
+    lang = window.navigator.languages[0].substr(0, 2);
+    console.log(lang);
+    require(`dayjs/locale/${lang}.js`);
+  }
+
   if(format == 'toLocaleString') {
     const options = { month: "long", day: "numeric", hour: "numeric", minute: "numeric" }
     return day.tz(timezone).toDate().toLocaleString(undefined, options)
   }
-  if(format) { return day.tz(timezone).format(format) }
-  return day.tz(timezone).format(`ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? '' : ' a'}`)
+
+  if (format === null || format === undefined) {
+    format = `ddd DD MMMM YYYY ${is24 ? 'HH' : 'h'}:mm${is24 ? '' : ' a'}`;
+  }
+  return day.tz(timezone).locale(lang).format(format);
 }
 
 // SofatimeComponent.prototype.renderOptionsList = function (stateChange) {
