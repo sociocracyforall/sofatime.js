@@ -1,3 +1,7 @@
+span.time-end:before {
+  content: " – ";
+}
+
 .sofatime {
   display: flex;
   flex-wrap: wrap;
