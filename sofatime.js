@@ -7,6 +7,9 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(localizedFormat);
 
+import tippy from 'tippy.js';
+//import 'tippy.js/dist/tippy.css';
+
 import jsontemplate from './template.js';
 import tzTemplate from './template.json';
 
@@ -79,6 +82,14 @@ function inspectLang(domNode) {
   return lang;
 }
 
+function isDecline(text) {
+  return text === 'false' || text === 'no';
+}
+
+function isAccept(text) {
+  return text === 'true' || text === 'yes';
+}
+
 export default function init(config = {}) {
   let { timezone,
         lang,
@@ -99,6 +110,9 @@ export default function init(config = {}) {
   }
 
   const listings = [];
+  const componentNodes = rootDomNode.querySelectorAll(
+    `[data-${listingDataName}]`
+  );
 
   function updateDisplayOptions(config = {}) {
     let modified = false;
@@ -128,11 +142,10 @@ export default function init(config = {}) {
     updateCallback: updateDisplayOptions,
   };
 
-  rootDomNode.querySelectorAll(`[data-${listingDataName}]`).forEach(
-    function (el) {
-      componentConfig.rootDomNode = el;
-      listings.push(component(componentConfig))
-    });
+  componentNodes.forEach(function (node) {
+    componentConfig.rootDomNode = node;
+    listings.push(component(componentConfig))
+  });
 
   updateDisplayOptions({
     timezone: dayjs.tz.guess(),
@@ -153,20 +166,29 @@ function component(config) {
   const { rootDomNode, updateCallback, listingDataName, } = config;
   const document = rootDomNode.ownerDocument;
   const errors = [];
-  let validityError = false;
   const settings = rootDomNode.dataset;
   const displayTimeOnlyStart = ['both', 'start'].includes(
     settings.displayTimesOnly);
   const displayTimeOnlyEnd = ['both', 'end'].includes(
     settings.displayTimesOnly);
+  let validityError = false;
   let lang = undefined;
   let rangeStartElement = undefined;
   let rangeEndElement = undefined;
   let toggle24HourDisplay = undefined;
   let timeZoneSelect = undefined;
 
-  if (settings.askTwentyFour !== 'false'
-      && settings['display-24hToggle'] !== 'false' ) {
+  let userControlsContainer = rootDomNode;
+  let userControlsNodeName = 'span';
+  if (!isAccept(settings.prominentControls)) {
+    userControlsContainer = createElement({
+      document, name: 'div', classes: ['menu',],
+    });
+    userControlsNodeName = 'div';
+  }
+
+  if (!isDecline(settings.askTwentyFour)
+      && !isDecline(settings['display-24hToggle'])) {
     toggle24HourDisplay = createElement({
       document, name: 'input',
       attributes: { type: 'checkbox', },
@@ -176,34 +198,44 @@ function component(config) {
         use24HourDisplay: e.srcElement.checked,
       })
     });
-    rootDomNode.appendChild(createElement({
-      document, name: 'div',
-      classes: [`${listingDataName}-24h-wrapper`],
+    userControlsContainer.appendChild(createElement({
+      document, name: userControlsNodeName,
+      classes: ['choose-24h-display',],
       children: [
         toggle24HourDisplay,
         createElement({
           document, name: 'label',
-          children: ['24h'],
+          children: ['24h',],
         }),
-        createElement({
+        /*createElement({
           document, name: 'p',
-          children: ['24h'],
-        }),
+          children: ['24h',],
+        }),*/
       ],
     }));
   }
 
-  if (settings.allowTimeZoneSelect !== 'false'
-      && settings.displaySelect !== 'false') {
+  if (!isDecline(settings.allowTimeZoneSelect)
+      && !isDecline(settings.displaySelect)) {
     timeZoneSelect = createElement({
       document, name: 'select',
     });
-    rootDomNode.appendChild(timeZoneSelect);
     timeZoneSelect.addEventListener('change', function (e) {
       updateCallback({
         timezone: e.srcElement.value,
       })
     });
+    userControlsContainer.appendChild(createElement({
+      document, name: userControlsNodeName,
+      classes: ['select-time-zone',],
+      children: [
+        createElement({
+          document, name: 'label',
+          children: ['Time zone',],
+        }),
+        timeZoneSelect,
+      ],
+    }));
   }
 
   // @@TODO@@: Use templating (e.g. with `lodash.template`) for the following:
@@ -230,20 +262,50 @@ function component(config) {
     if (bounds.length === 2) {
       endDateTime = dayjs(bounds[1]);
       if (!endDateTime.isValid()) {
-        errors.push('End date and time are invalid');
+        errors.push('End date and time are invalid.');
         validityError = true;
+      } else {
+        rangeEndElement = document.createElement('span');
+        rangeEndElement.classList.add('time-end', 'time');
+        view.appendChild(rangeEndElement);
       }
-      rangeEndElement = document.createElement('span');
-      rangeEndElement.classList.add('time-end', 'time');
-      view.appendChild(rangeEndElement);
     }
   }
 
   if (errors.length > 0) {
     // Errors will be noted until the component is reloaded.
-    // @@TODO@@: render individual error messages
-    view.appendChild(document.createTextNode(
-      `Number of errors: ${errors.length}.`));
+    errors.forEach(function (error) {
+      view.appendChild(createElement({
+        document, name: 'div', classes: ['error',], children: [error,],
+      }));
+    });
+  }
+
+  if (!isAccept(settings.prominentControls)
+      && userControlsContainer.hasChildNodes()) {
+    const menuButtonElement = createElement({
+      document, name: 'button', classes: ['menu-button'], children: ['⋮'],
+    });
+    const menuButton = tippy(rootDomNode, {
+      content: menuButtonElement,
+      placement: 'right-start',
+      //trigger: 'manual',
+      interactive: true,
+      arrow: false,
+      offset: [0, -30],
+      delay: [null, 100],
+    });
+    const menu = tippy(menuButtonElement, {
+      content: userControlsContainer,
+      placement: 'bottom-end',
+      trigger: 'manual',
+      interactive: true,
+      arrow: false,
+      offset: [0, 0],
+    });
+    menuButtonElement.addEventListener('click', function () {
+      menu.show();
+    });
   }
 
   function render(config) {
@@ -251,7 +313,15 @@ function component(config) {
 
     if (timeZoneSelect !== undefined && config.lang !== lang) {
       lang = config.lang;
-      const tzData = require(`./locale/${lang}.json`);
+      let tzData = undefined;
+      try {
+        tzData = require(`./locale/${lang}.json`);
+      } catch {
+        console.log(
+          `No time zone options localization is available for '${lang}'.`
+        );
+        tzData = require('./locale/en.json');
+      }
       timeZoneSelect.appendChild(
         jsontemplate(document, tzTemplate.rootpattern, tzData));
     }
@@ -322,5 +392,10 @@ function formatDateAndTime(config = {}) {
       use24HourDisplay ? 'HH' : 'h'}:mm${
       use24HourDisplay ? '' : ' a'}`;
   }
-  return dateAndTime.locale(lang).tz(timezone).format(format);
+  // Work around the following Day.js issue:
+  // <https://github.com/iamkun/dayjs/issues/1813>
+  if (timezone === 'Etc/UTC') {
+    return dateAndTime.utc().locale(lang).format(format);
+  }
+  return dateAndTime.tz(timezone).locale(lang).format(format);
 }

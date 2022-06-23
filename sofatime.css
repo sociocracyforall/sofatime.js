@@ -2,47 +2,83 @@ span.time-end:before {
   content: " – ";
 }
 
-.sofatime {
+div.menu {
+  background-color: white;
+  border: 1px solid grey;
+  padding: 0.25em;
+}
+
+div.menu div.select-time-zone {
+  width: 300px;
+}
+
+span.choose-24h-display label {
+  margin-right: 0.5em;
+}
+
+span.select-time-zone label {
+  margin-right: 0.5em;
+}
+
+span.select-time-zone select {
+  width: 300px;
+}
+
+div.menu label {
+  display: inline-block;
+  width: 40%;
+}
+
+div.menu div.select-time-zone select {
+  width: 60%;
+}
+
+.Xsofatime {
   display: flex;
   flex-wrap: wrap;
   /*justify-content: center;*/
   /*align-items: center;*/
 }
 
-.sofatime div:nth-of-type(3) {
+.Xsofatime div:nth-of-type(3) {
   flex-basis: 100%;
 }
 
-.sofatime span {
+.Xsofatime span {
   display: inline-block; /* inline-block allows min-width */
   font-weight: bold;
   min-width: 16ch;
 }
 
-.sofatime .hidden { display: none; }
+.Xsofatime .hidden { display: none; }
 
-.sofatime .times {
+.Xsofatime .times {
   display: flex;
   white-space: nowrap;
 }
 
-.sofatime .times div {
+.Xsofatime .times div {
   flex-wrap: nowrap;
   margin: 0.25em;
 }
 
-.sofatime-error {
+.Xsofatime-error {
   background-color: #ffdddd;
 }
-.sofatime-error .sofatime-select-wrapper, .sofatime-error .sofatime-24h-wrapper {
+.Xsofatime-error .Xsofatime-select-wrapper, .Xsofatime-error .Xsofatime-24h-wrapper {
   /* display: none; */
 }
 
-.sofatimezone-select {
+.Xsofatimezone-select {
   max-width: 300px;
 }
 
-.sofatime-24h-wrapper {
+/* The following rules have been disabled with the leading 'X' because I can't
+ * make them work with the new view style, so we are falling back to default
+ * checkbox formatting.  To re-enable these rules, simply remove the leading
+ * 'X's, then you can work to get the fancy styling back in place! */
+
+.Xchoose-24h-display {
   display: inline-flex;
   background: #d9d9d9;
 
@@ -52,7 +88,8 @@ span.time-end:before {
   vertical-align: text-top;
   align-items: center;
 }
-.sofatime-24h-wrapper p {
+
+.Xchoose-24h-display p {
   padding: 2px 6px 0 2px;
 }
 
@@ -60,14 +97,14 @@ span.time-end:before {
 /*The following based on https://codepen.io/mburnette/pen/LxNxNg */
 
 /*.input[type=checkbox]{*/
-.sofatime-24h-checkbox {
+.Xchoose-24h-display input {
   height: 0;
   width: 0;
   visibility: hidden;
 }
 
 /*label {*/
-.sofatime-24h-label {
+.Xchoose-24h-display label {
   cursor: pointer;
   text-indent: -9999px;
   width: 30px; /*was 200px*/
@@ -79,7 +116,7 @@ span.time-end:before {
 }
 
 /*label:after {*/
-.sofatime-24h-label:after {
+.Xchoose-24h-display label:after {
   content: '';
   position: absolute;
   top: 1px;
@@ -92,17 +129,17 @@ span.time-end:before {
 }
 
 /*input:checked + label {*/
-.sofatime-24h-checkbox:checked + .sofatime-24h-label {
+.Xchoose-24h-display input:checked + label {
   background: #5c8bd6;
 }
 
 /*input:checked + label:after {*/
-.sofatime-24h-checkbox:checked + .sofatime-24h-label:after {
+.Xchoose-24h-display input:checked + label:after {
   left: calc(100% - 1px); /*was left: calc(100% - 5px) */
   transform: translateX(-100%);
 }
 
 /*label:active:after {*/
-.sofatime-24h-label:active:after {
+.Xchoose-24h-display label:active:after {
   width: 18px; /*was 130px*/
 }
