@@ -11,11 +11,12 @@ add_action('init', 'sofatime_register_shortcodes');
 
 function sofatime_script_enqueue() {
   $dir_url = plugin_dir_url(__FILE__);
+  $dir_path = plugin_dir_path(__FILE__);
   $sofatime_path = "wordpress/main.bundle.js";
   wp_enqueue_script('sofatime', $dir_url . $sofatime_path, array(),
-                    filemtime($dir_url . $sofatime_path));
+                    filemtime($dir_path . $sofatime_path));
   wp_enqueue_style('sofatime-css', $dir_url . "sofatime.css", array(),
-                   filemtime($dir_url . "sofatime.css"));
+                   filemtime($dir_path . "sofatime.css"));
 }
 
 function sofatime_register_shortcodes() {
@@ -43,7 +44,7 @@ function sofatime_shortcode_function($atts, $content = null) {
 
   $out = '<div class="sofatime" data-sofatime="'
          . htmlspecialchars($content) . '"';
-  foreach($atts as $key => $value) {
+  foreach((array) $atts as $key => $value) {
     if(in_array($key, $allowed_attributes)) {
       $out .= ' data-' . strtolower($key) . '="'
               . htmlspecialchars($value) . '"';
