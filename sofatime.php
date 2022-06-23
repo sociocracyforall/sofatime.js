@@ -3,7 +3,7 @@
  * Plugin Name: SoFA Time
  * Description: Uses a shortcode to identify time and date strings and change them to the client's local time zone.
  * Author: SociocracyForAll, Vernon Coffey
- * Version: 0.2.0-pre5
+ * Version: 0.2.0-pre6
  */
 
 add_action('wp_enqueue_scripts', 'sofatime_script_enqueue');

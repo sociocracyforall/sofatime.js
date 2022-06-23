@@ -1,13 +1,13 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: './sofatime-wp.js',
   output: {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'wordpress'),
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   module: {
     rules: [
       {
