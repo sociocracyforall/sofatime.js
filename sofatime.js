@@ -267,16 +267,14 @@ function component(config) {
     errors.push(
       "Could not parse range: more than one separator (' - ') found.");
   } else {
-    const lowerBound = processLegacyInputFormat(bounds[0]);
-    startDateTime = dayjs(lowerBound);
+    startDateTime = dayjs(processLegacyInputFormat(bounds[0]));
     if (!startDateTime.isValid()) {
       errors.push('Start date and time are invalid.');
       validityError = true;
     }
 
     if (bounds.length === 2) {
-      const upperBound = processLegacyInputFormat(bounds[1]);
-      endDateTime = dayjs(upperBound);
+      endDateTime = dayjs(processLegacyInputFormat(bounds[1]));
       if (!endDateTime.isValid()) {
         errors.push('End date and time are invalid.');
         validityError = true;
