@@ -90,6 +90,20 @@ function isAccept(text) {
   return text === 'true' || text === 'yes';
 }
 
+// Some users of this plugin had submitted encoded dates and times such as
+// '2022-06-27 19:45 UTC'; it's not hard to convert values in this encoding to
+// ISO 8601-encoded values, and we support these legacy values by converting
+// them to e.g. '2022-06-27T19:45Z'.  If this function does not recognize the
+// legacy encoding, it returns the (trimmed) original encoding.
+function processLegacyInputFormat(encodedDateAndTime) {
+  encodedDateAndTime = encodedDateAndTime.trim();
+  const components = encodedDateAndTime.split(' ');
+  if (components.length === 3 && components[2] === 'UTC') {
+    return components[0] + 'T' + components[1] + 'Z';
+  }
+  return encodedDateAndTime;
+}
+
 export default function init(config = {}) {
   let { timezone,
         lang,
@@ -253,14 +267,16 @@ function component(config) {
     errors.push(
       "Could not parse range: more than one separator (' - ') found.");
   } else {
-    startDateTime = dayjs(bounds[0]);
+    const lowerBound = processLegacyInputFormat(bounds[0]);
+    startDateTime = dayjs(lowerBound);
     if (!startDateTime.isValid()) {
       errors.push('Start date and time are invalid.');
       validityError = true;
     }
 
     if (bounds.length === 2) {
-      endDateTime = dayjs(bounds[1]);
+      const upperBound = processLegacyInputFormat(bounds[1]);
+      endDateTime = dayjs(upperBound);
       if (!endDateTime.isValid()) {
         errors.push('End date and time are invalid.');
         validityError = true;
