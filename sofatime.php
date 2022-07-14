@@ -3,7 +3,7 @@
  * Plugin Name: SoFA Time
  * Description: Uses a shortcode to identify time and date strings and change them to the client's local time zone.
  * Author: SociocracyForAll, Vernon Coffey
- * Version: 0.2.0-pre6
+ * Version: 0.2.0
  */
 
 add_action('wp_enqueue_scripts', 'sofatime_script_enqueue');
@@ -42,15 +42,26 @@ function sofatime_shortcode_function($atts, $content = null) {
     'prominent-controls',
   );
 
-  $out = '<div class="sofatime" data-sofatime="'
+  $atts = (array) $atts;
+  $inline = array_key_exists('inline', $atts)
+    && ($atts['inline'] === 'yes' || $atts['inline'] === 'true');
+  $elementName = $inline ? 'span' : 'div';
+
+  $out = '<' . $elementName . ' class="sofatime" data-sofatime="'
          . htmlspecialchars($content) . '"';
-  foreach((array) $atts as $key => $value) {
+  foreach($atts as $key => $value) {
     if(in_array($key, $allowed_attributes)) {
       $out .= ' data-' . strtolower($key) . '="'
               . htmlspecialchars($value) . '"';
     }
   }
-  $out .= "></div>\n";
+  if(!in_array('prominent-controls', $atts)) {
+    $out .= ' data-prominent-controls="true"';
+  }
+  $out .= '></' . $elementName . '>';
+  if (!$inline) {
+    $out .= "\n";
+  }
 
   return $out;
 }

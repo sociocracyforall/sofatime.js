@@ -1,5 +1,18 @@
-span.time-end:before {
+span.date-time-end:before {
   content: " – ";
+}
+
+span.range {
+  /*padding-right: 40px;*/
+}
+
+span.error {
+  padding-right: 0.5em;
+}
+
+span:not(:first-of-type).range:before {
+  content: "\a";
+  white-space: pre;
 }
 
 div.menu {

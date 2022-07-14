@@ -253,10 +253,12 @@ function component(config) {
   }
 
   // @@TODO@@: Use templating (e.g. with `lodash.template`) for the following:
-  const view = document.createElement('div');
-  view.classList.add('times');
+  const view = document.createElement('span');
+  view.classList.add('times', 'range');
   rangeStartElement = document.createElement('span');
-  rangeStartElement.classList.add('time-start', 'time');
+  rangeStartElement.classList.add(
+    'time-start', 'time', 'date-time-start', 'date-time',
+  );
   view.appendChild(rangeStartElement);
   rootDomNode.appendChild(view);
 
@@ -280,7 +282,9 @@ function component(config) {
         validityError = true;
       } else {
         rangeEndElement = document.createElement('span');
-        rangeEndElement.classList.add('time-end', 'time');
+        rangeEndElement.classList.add(
+          'time-end', 'time', 'date-time-end', 'date-time',
+        );
         view.appendChild(rangeEndElement);
       }
     }
@@ -290,7 +294,7 @@ function component(config) {
     // Errors will be noted until the component is reloaded.
     errors.forEach(function (error) {
       view.appendChild(createElement({
-        document, name: 'div', classes: ['error',], children: [error,],
+        document, name: 'span', classes: ['error',], children: [error,],
       }));
     });
   }
@@ -300,13 +304,14 @@ function component(config) {
     const menuButtonElement = createElement({
       document, name: 'button', classes: ['menu-button'], children: ['⋮'],
     });
+    const inlineComponent = rootDomNode.localName === 'span';
     const menuButton = tippy(rootDomNode, {
       content: menuButtonElement,
-      placement: 'right-start',
+      placement: (inlineComponent ? 'top-end' : 'right-start'),
       //trigger: 'manual',
       interactive: true,
       arrow: false,
-      offset: [0, -30],
+      offset: [0, (inlineComponent ? 0 : -30)],
       delay: [null, 100],
     });
     const menu = tippy(menuButtonElement, {
