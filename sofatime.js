@@ -190,6 +190,7 @@ function component(config) {
   let rangeStartElement = undefined;
   let rangeEndElement = undefined;
   let toggle24HourDisplay = undefined;
+  let toggle24HourDisplayLabel = undefined;
   let timeZoneSelect = undefined;
 
   let userControlsContainer = rootDomNode;
@@ -207,6 +208,16 @@ function component(config) {
       document, name: 'input',
       attributes: { type: 'checkbox', },
     });
+    toggle24HourDisplayLabel = createElement({
+      document, name: 'label',
+      children: [
+        '24h',
+        toggle24HourDisplay,
+        createElement({
+          document, name: 'span', classes: ['custom-checkbox-background',],
+        }),
+      ],
+    });
     toggle24HourDisplay.addEventListener('change', function (e) {
       updateCallback({
         use24HourDisplay: e.srcElement.checked,
@@ -216,11 +227,7 @@ function component(config) {
       document, name: userControlsNodeName,
       classes: ['choose-24h-display',],
       children: [
-        toggle24HourDisplay,
-        createElement({
-          document, name: 'label',
-          children: ['24h',],
-        }),
+        toggle24HourDisplayLabel,
         /*createElement({
           document, name: 'p',
           children: ['24h',],
@@ -367,6 +374,10 @@ function component(config) {
 
     if (toggle24HourDisplay !== undefined) {
       toggle24HourDisplay.checked = config.use24HourDisplay;
+      toggle24HourDisplayLabel.classList.toggle(
+        'child-checked',
+        config.use24HourDisplay,
+      );
     }
 
     if (timeZoneSelect !== undefined) {
