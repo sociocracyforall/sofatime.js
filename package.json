@@ -1,17 +1,16 @@
 {
-  "name": "sofatime",
+  "name": "@sociocracyforall/sofatime.js",
+  "description": "JavaScript widget for dates and times that allows users to display those dates and times in their local timezone and locale.",
   "packageManager": "yarn@3.2.2",
-  "version": "0.2.0",
-  "private": true,
+  "version": "0.3.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "wordpress": "webpack --config webpack.wordpress.js",
     "devser": "webpack server --open"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sociocracyforall/sofatime.git"
+    "url": "git+https://github.com/sociocracyforall/sofatime.js.git"
   },
   "keywords": [
     "date",
@@ -19,12 +18,17 @@
     "localization",
     "widget"
   ],
-  "author": "Vernon Coffey",
+  "author": "Sociocracy For All (https://github.com/sociocracyforall)",
+  "contributors": [
+    "Vernon Coffey (https://github.com/vccoffey)",
+    "William Coffey (https://github.com/wilcof)",
+    "John L. Clark <john.l.clark@sociocracyforall.org> (https://github.com/Juanc1to)"
+  ],
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/sociocracyforall/sofatime/issues"
+    "url": "https://github.com/sociocracyforall/sofatime.js/issues"
   },
-  "homepage": "https://github.com/sociocracyforall/sofatime#readme",
+  "homepage": "https://github.com/sociocracyforall/sofatime.js#readme",
   "devDependencies": {
     "css-loader": "^6.7.1",
     "html-webpack-plugin": "^5.5.0",
@@ -36,5 +40,6 @@
   "dependencies": {
     "dayjs": "^1.11.2",
     "tippy.js": "^6.3.7"
-  }
+  },
+  "main": "sofatime.js"
 }

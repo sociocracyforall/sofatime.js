@@ -53,6 +53,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sociocracyforall/sofatime.js@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@sociocracyforall/sofatime.js@workspace:."
+  dependencies:
+    css-loader: ^6.7.1
+    dayjs: ^1.11.2
+    html-webpack-plugin: ^5.5.0
+    style-loader: ^3.3.1
+    tippy.js: ^6.3.7
+    webpack: ^5.72.1
+    webpack-cli: ^4.9.2
+    webpack-dev-server: ^4.9.0
+  languageName: unknown
+  linkType: soft
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -3238,21 +3253,6 @@ __metadata:
   checksum: dd9194293059d737759d5c69273850ad4149f448426249325c4bea0e340d1cf3d266c3b022694b0dcf5d31f759de23657244c481fc1e8322add80b7985c36b5e
   languageName: node
   linkType: hard
-
-"sofatime@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "sofatime@workspace:."
-  dependencies:
-    css-loader: ^6.7.1
-    dayjs: ^1.11.2
-    html-webpack-plugin: ^5.5.0
-    style-loader: ^3.3.1
-    tippy.js: ^6.3.7
-    webpack: ^5.72.1
-    webpack-cli: ^4.9.2
-    webpack-dev-server: ^4.9.0
-  languageName: unknown
-  linkType: soft
 
 "source-map-js@npm:^1.0.2":
   version: 1.0.2
