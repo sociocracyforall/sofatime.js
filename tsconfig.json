@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 18",
+  "include": ["./src/component.ts"],
+  "compilerOptions": {
+    "lib": ["dom", "es2022"],
+    "target": "es2022",
+    "allowJs": true,
+    "checkJs": false,
+    "noImplicitAny": true,
+    "strict": true
+  }
+}

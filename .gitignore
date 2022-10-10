@@ -12,3 +12,5 @@ site/*
 !.yarn/sdks
 !.yarn/versions
 
+# Ignore compiled js files
+src/*.js
