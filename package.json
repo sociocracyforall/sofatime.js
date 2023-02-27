@@ -3,11 +3,7 @@
   "description": "JavaScript widget for dates and times that allows users to display those dates and times in their local timezone and locale.",
   "packageManager": "yarn@3.2.2",
   "version": "0.3.0",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "devser": "webpack server --open"
-  },
+  "scripts": { },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sociocracyforall/sofatime.js.git"
@@ -29,14 +25,7 @@
     "url": "https://github.com/sociocracyforall/sofatime.js/issues"
   },
   "homepage": "https://github.com/sociocracyforall/sofatime.js#readme",
-  "devDependencies": {
-    "css-loader": "^6.7.1",
-    "html-webpack-plugin": "^5.5.0",
-    "style-loader": "^3.3.1",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.9.0"
-  },
+  "devDependencies": {},
   "dependencies": {
     "dayjs": "^1.11.2",
     "tippy.js": "^6.3.7"
