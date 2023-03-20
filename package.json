@@ -3,7 +3,9 @@
   "description": "JavaScript widget for dates and times that allows users to display those dates and times in their local timezone and locale.",
   "packageManager": "yarn@3.2.2",
   "version": "0.3.0",
-  "scripts": { },
+  "scripts": {
+    "dev": "vite --host"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sociocracyforall/sofatime.js.git"
@@ -25,10 +27,9 @@
     "url": "https://github.com/sociocracyforall/sofatime.js/issues"
   },
   "homepage": "https://github.com/sociocracyforall/sofatime.js#readme",
-  "devDependencies": {},
-  "dependencies": {
-    "dayjs": "^1.11.2",
-    "tippy.js": "^6.3.7"
+  "devDependencies": {
+    "vite": "^4.2.1"
   },
+  "dependencies": {},
   "main": "sofatime.js"
 }
