@@ -1,3 +1,49 @@
+Notes 3/20/2023
+---
+- Finalize attribute names
+```typescript
+interface ComponentAttributes {
+  // ISOish time string, allow for some variation from standard for convenience (no required T)
+  // 2023-03-20T17:46:09.200Z
+  data-start: RFC8601-TimeString;    
+  data-end: ISOTimeString;    
+  data-display-24hToggle: 
+
+
+  data-start: ISO8601
+
+  data-local-start: 
+  data-local-end: 
+  data-local-timezone: 
+}
+
+```
+
+- DayJS still required? Currently `timezone: dayjs.tz.guess()` is used to guess timezone from input.
+- Also used for format string, better options for format string in dayjs, better localization in Intl.
+```javascript
+  d.tz.guess = function () {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone
+  }
+```
+
+
+
+
+# for localization:
+```javascript
+const event = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
+["en-GB", "en-US", "ko-KR", "es-MX"].forEach((locale) =>
+  ["full", "long", "medium", "short"].forEach((dateStyle) => {
+    console.log(locale, dateStyle);
+    console.log(event.toLocaleString(locale, { timeZone: "UTC", dateStyle: dateStyle }));
+    console.log("");
+  })
+);
+```
+
+
+
 
 # data-sofatime
 # data-display-24h-toggle
