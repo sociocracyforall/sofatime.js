@@ -4,14 +4,25 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Sofatime Web Component Demo</title>
     <script type="module" src="./src/component.ts"></script>
+    <script type="module">
+      import timezones from './src/testdata/timezones.json'
+      import locales from './src/testdata/timezones.json'
+      const styles = ['short', 'medium', 'full', undefined]
+
+      setInterval(() => {
+        const state = {
+          timezone: timezones[Math.floor(Math.random() * timezones.length)],
+          local: locales[Math.floor(Math.random() * locales.length)],
+          dateStyle: styles[Math.floor(Math.random() * styles.length)],
+        }
+        window.sofatime.setState(state)
+      }, 500)
+    </script>
   </head>
   <body>
-    <div> Sofatime Demo </div>
-    <sofa-time data-sofatime="2021-01-01 05:00 UTC" data-format="H:mm" data-display-24h-toggle="true"> </sofa-time>
-    <sofa-time data-sofatime="2021-01-01 05:00 UTC" data-format="H:mm" data-display-24h-toggle="true"> </sofa-time>
-    <sofa-time data-sofatime="2021-01-01 05:00 UTC" data-format="H:mm" data-display-24h-toggle="true"> </sofa-time>
-    <sofa-time data-sofatime="2021-01-01 05:00 UTC" data-format="H:mm" data-display-24h-toggle="true"> </sofa-time>
+    <div>Sofatime Demo</div>
+    <sofa-time data-start="2021-01-01 05:00 UTC" data-display24toggle="true"> </sofa-time>
+    <sofa-time data-start="2021-01-01 05:00 UTC" data-end="2021-01-01 05:00 UTC" data-display24toggle="true">
+    </sofa-time>
   </body>
 </html>
-
-
