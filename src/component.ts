@@ -102,6 +102,8 @@ class Sofatime extends HTMLElement {
     return;
   };
 
+  /**
+   */
   displayTime(containerId: string, value: string) {
     const container = this.shadow?.getElementById(containerId);
     const time = this.shadow?.getElementById(containerId + "Time");

@@ -1,3 +1,14 @@
+Notes 3/27/2023
+---
+
+- html template and css. Use base16 color scheme?
+- github projects?
+- pull tippy back in and finish HTML templating
+- Finalize data options. Ditch 24hToggle? Look at toLocaleString options object on mdn
+- Think about future updates.
+- Polyfill Intl. Finish bundler 
+
+
 Notes 3/20/2023
 ---
 - Finalize attribute names
