@@ -1,3 +1,10 @@
+# Development notes
+
+To build and host for dev work run `npm run dev`. This will call the dev script in package.json
+which uses vite to host it and watch for changes.
+
+vite does not do any typechecking. To check run `tsc --watch` in root of repository.
+
 # sofatime Wordpress plugin
 ### use a shortcode to display a date and time in user's local or chosen timezone
 
