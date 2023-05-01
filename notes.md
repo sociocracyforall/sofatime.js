@@ -1,3 +1,8 @@
+Notes 5/1/2023
+---
+ - use Tom Select? https://www.npmjs.com/package/tom-select
+ - updated template.html
+
 Notes 3/27/2023
 ---
 
