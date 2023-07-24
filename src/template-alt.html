@@ -1,3 +1,19 @@
+<!-- 
+  JS DIV IDs (containers are for styling only and ignored by JS):
+
+  input/output form elements:
+  toggle24h <- input type="checkbox"
+  time-zone-select <- select (value will be a tz database name, eg Pacific/Honolulu)
+
+  output divs:
+  startLocaleString
+  startLocaleDateString
+  startLocaleTimeString
+  endLocaleString
+  endLocaleDateString
+  endLocaleTimeString
+-->
+
 <style>
   .container {
     width: fit-content;
@@ -12,6 +28,8 @@
   #end {
     flex: 1;
     flex-basis: fit-content;
+
+    .datetime { display: none; }
   }
   #end {
     margin-left: 10px;
@@ -48,13 +66,15 @@
   <div id="times" class="container">
     <div id="start">
       <div class="label">Event Start</div>
-      <div id="startDate" class="date">Tue 02 May 2023</div>
-      <div id="startTime" class="time">11:00 am</div>
+      <div id="startLocaleString" class="datetime">Tue 02 May 2023</div>
+      <div id="startLocaleDateString" class="date">Tue 02 May 2023</div>
+      <div id="startLocaleTimeString" class="time">11:00 am</div>
     </div>
     <div id="end">
       <div class="label">Event End</div>
-      <div id="endDate" class="date">Tue 02 May 2023</div>
-      <div id="endTime" class="time">1:00 pm</div>
+      <div id="endLocaleString" class="datetime">Tue 02 May 2023</div>
+      <div id="endLocaleDateString" class="date">Tue 02 May 2023</div>
+      <div id="endLocaleTimeString" class="time">1:00 pm</div>
     </div>
   </div>
 </div>
