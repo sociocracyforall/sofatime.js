@@ -95,16 +95,35 @@ class Sofatime extends HTMLElement {
    */
   render = (state: GlobalState) => {
     if (!this.shadow) throw "ERR: Shadow never attached to component";
-    const { display24toggle, start, end } = this.dataset;
+    const { display24toggle } = this.dataset;
 
-    this.displayTime("start", Sofatime.getLocaleString(start, state));
-    this.displayTime("end", Sofatime.getLocaleString(end, state));
+    const start = new Date(this.dataset.start ?? "Invalid Date");
+    const end = new Date(this.dataset.end ?? "Invalid Date");
+
+    this.displayTime("startLocaleString", Sofatime.getLocaleString(start, state));
+    this.displayTime("startLocaleTimeString", Sofatime.getLocaleTimeString(start, state));
+    this.displayTime("startLocaleDateString", Sofatime.getLocaleDateString(start, state));
+
+    this.displayTime("endLocaleString", Sofatime.getLocaleString(end, state));
+    this.displayTime("endLocaleTimeString", Sofatime.getLocaleTimeString(end, state));
+    this.displayTime("endLocaleDateString", Sofatime.getLocaleDateString(end, state));
+
+    /** */
+
     return;
   };
 
-  /**
-   */
-  displayTime(containerId: string, value: string) {
+  /** */
+  displayTime(id: string, value: string) {
+    const el = this.shadow?.getElementById(id);
+    if (el) {
+      if (value == "Invalid Date") {
+        el.innerHTML = '';
+      } else {
+        el.innerHTML = value;
+      }
+    }
+    /*
     const container = this.shadow?.getElementById(containerId);
     const time = this.shadow?.getElementById(containerId + "Time");
     if (container && time) {
@@ -112,15 +131,29 @@ class Sofatime extends HTMLElement {
       if (!value) container.style.display = "none";
       else container.style.display = "block";
     }
+   */
   }
 
-  static getLocaleString(iso8601: string | undefined, options: GlobalState): string {
-    if (!iso8601) return "";
-    const date = new Date(iso8601);
-    if (date.toString() == "Invalid Date") return "";
+  static getLocaleString(date: Date, options: GlobalState): string {
+    if (date.toString() === "Invalid Date") return "Invalid Date";
     return date.toLocaleString(options.locale, {
       timeZone: options.timezone,
       dateStyle: options.dateStyle,
+    });
+  }
+
+  static getLocaleDateString(date: Date, options: GlobalState): string {
+    if (date.toString() === "Invalid Date") return "Invalid Date";
+    return date.toLocaleDateString(options.locale, {
+      timeZone: options.timezone,
+      dateStyle: options.dateStyle,
+    });
+  }
+
+  static getLocaleTimeString(date: Date, options: GlobalState): string {
+    if (date.toString() === "Invalid Date") return "Invalid Date";
+    return date.toLocaleTimeString(options.locale, {
+      timeZone: options.timezone,
     });
   }
 
@@ -137,7 +170,7 @@ const globalState = new SofatimeGlobalState({
 });
 globalState.guessUsersLocale();
 customElements.define("sofa-time", Sofatime);
-window.sofatime = globalState
+window.sofatime = globalState;
 
 /*
 const event = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
