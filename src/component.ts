@@ -91,7 +91,8 @@ class Sofatime extends HTMLElement {
   connectedCallback() {
     this.shadow = this.attachShadow({ mode: "open" });
     this.shadow.innerHTML = html;
-    this.updateDropdownOptions();
+    this.setDropdownOptions();
+    this.setToggle24Hour();
     this.render(globalState.state);
     globalState.addEventListener(this.render);
   }
@@ -114,11 +115,46 @@ class Sofatime extends HTMLElement {
     this.displayTime("endLocaleTimeString", Sofatime.getLocaleTimeString(end, state));
     this.displayTime("endLocaleDateString", Sofatime.getLocaleDateString(end, state));
 
+    /** Update selected dropdown, for when it get's changed by a different sofotim element */
     this.updateSelectedDropdown();
+    this.updateToggle24Hour();
     return;
   };
 
-  updateDropdownOptions() {
+  /**
+   * Adds event listeners for 24 toggle checkbox
+   */
+  setToggle24Hour() {
+    const el = this.shadow?.getElementById("toggle24Hour");
+    if (!el) return false;
+    el.addEventListener("change", this.toggle24HourChange);
+  }
+
+  /** When user clicks checkbox */
+  toggle24HourChange(e: Event) {
+    const checkbox = e.target as HTMLInputElement;
+    const checked = checkbox.checked;
+    if (checked !== globalState.state.use24HourDisplay) {
+      globalState.setState({ use24HourDisplay: checked });
+    }
+  }
+
+  /** Called to render tate of checkbox since it can be changed by other components */
+  updateToggle24Hour() {
+    const el = this.shadow?.getElementById("toggle24Hour") as HTMLInputElement | undefined;
+    if (!el) return false;
+    if (el.checked !== globalState.state.use24HourDisplay) {
+      el.checked = globalState.state.use24HourDisplay;
+    }
+  }
+
+  /**
+   * Updates the innerHTML of the timezone select dropdown to contain values from imported
+   * locales file
+   *
+   * @TODO locales besides english
+   */
+  setDropdownOptions() {
     const el = this.shadow?.getElementById("localeDropdown");
     if (!el) return false;
     let html = ``;
