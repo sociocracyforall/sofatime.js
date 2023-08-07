@@ -1,3 +1,4 @@
+import timezones from './testdata/timezones.json'
 import html from "./template.html?raw";
 /**
  * State shared between all sofatime components, updating any of these
@@ -59,6 +60,7 @@ class SofatimeGlobalState {
 class Sofatime extends HTMLElement {
   shadow?: ShadowRoot;
   constructor() {
+    console.log(timezones)
     super();
   }
   /**

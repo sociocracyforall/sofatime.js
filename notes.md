@@ -1,3 +1,9 @@
+Notes 8/3
+---
+How should elements behave when there is no valid end date?
+endContainer?
+
+
 Notes 5/1/2023
 ---
  - use Tom Select? https://www.npmjs.com/package/tom-select
