@@ -155,7 +155,7 @@ class Sofatime extends HTMLElement {
    * @TODO locales besides english
    */
   setDropdownOptions() {
-    const el = this.shadow?.getElementById("localeDropdown");
+    const el = this.shadow?.getElementById("timezoneDropdown");
     if (!el) return false;
     let html = ``;
 
@@ -198,7 +198,7 @@ class Sofatime extends HTMLElement {
    * If not, then the timzoneLabel will need to be part of state & will need to be guessed from locale
    */
   updateSelectedDropdown() {
-    const el = this.shadow?.getElementById("localeDropdown");
+    const el = this.shadow?.getElementById("timezoneDropdown");
     if (!el) return false;
     const tz = globalState.state.timezone;
     for (const option of el.querySelectorAll("option")) {
@@ -208,7 +208,9 @@ class Sofatime extends HTMLElement {
     }
   }
 
-  /** */
+  /**
+  * @TODO How to handle Invalid Date, display: none on element?
+  */
   displayTime(id: string, value: string) {
     const el = this.shadow?.getElementById(id);
     if (el) {
@@ -218,15 +220,6 @@ class Sofatime extends HTMLElement {
         el.innerHTML = value;
       }
     }
-    /*
-    const container = this.shadow?.getElementById(containerId);
-    const time = this.shadow?.getElementById(containerId + "Time");
-    if (container && time) {
-      time.innerHTML = value;
-      if (!value) container.style.display = "none";
-      else container.style.display = "block";
-    }
-   */
   }
 
   static getLocaleString(date: Date, options: GlobalState): string {
