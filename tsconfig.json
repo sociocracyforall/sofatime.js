@@ -3,7 +3,10 @@
   "display": "Node 18",
   "include": ["./src"],
   "compilerOptions": {
-    "lib": ["dom", "es2022"],
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "lib": ["dom.iterable", "dom", "es2022"],
     "target": "es2022",
     "allowJs": true,
     "checkJs": false,

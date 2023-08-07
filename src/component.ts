@@ -1,4 +1,4 @@
-import timezones from './testdata/timezones.json'
+import locales from "../locale/en.json";
 import html from "./template.html?raw";
 /**
  * State shared between all sofatime components, updating any of these
@@ -17,10 +17,17 @@ interface GlobalState {
   dateStyle?: "short" | "medium" | "long" | "full";
   theme?: string;
 }
+interface LocaleCategory {
+  label: string;
+  options: {
+    timezoneName: string;
+    timezoneLabel: string;
+  }[];
+}
 
 class SofatimeGlobalState {
   private listeners: Function[] = [];
-  private state: GlobalState;
+  state: GlobalState;
 
   constructor(state: GlobalState) {
     this.state = state;
@@ -33,13 +40,10 @@ class SofatimeGlobalState {
     });
   }
 
+  /** @TODO Only call listeners if state is actually changing */
   setState(state: Partial<GlobalState>) {
     Object.assign(this.state, state);
     this.listeners.map((fn) => fn(this.state));
-  }
-
-  getState(): GlobalState {
-    return this.state;
   }
 
   addEventListener(listener: Function) {
@@ -60,7 +64,6 @@ class SofatimeGlobalState {
 class Sofatime extends HTMLElement {
   shadow?: ShadowRoot;
   constructor() {
-    console.log(timezones)
     super();
   }
   /**
@@ -69,7 +72,7 @@ class Sofatime extends HTMLElement {
    */
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (this.shadow) {
-      this.render(globalState.getState());
+      this.render(globalState.state);
     }
   }
   /** What dataset attributes are watched for attributeChangedCallback */
@@ -88,7 +91,8 @@ class Sofatime extends HTMLElement {
   connectedCallback() {
     this.shadow = this.attachShadow({ mode: "open" });
     this.shadow.innerHTML = html;
-    this.render(globalState.getState());
+    this.updateDropdownOptions();
+    this.render(globalState.state);
     globalState.addEventListener(this.render);
   }
 
@@ -110,17 +114,70 @@ class Sofatime extends HTMLElement {
     this.displayTime("endLocaleTimeString", Sofatime.getLocaleTimeString(end, state));
     this.displayTime("endLocaleDateString", Sofatime.getLocaleDateString(end, state));
 
-    /** */
-
+    this.updateSelectedDropdown();
     return;
   };
+
+  updateDropdownOptions() {
+    const el = this.shadow?.getElementById("localeDropdown");
+    if (!el) return false;
+    let html = ``;
+
+    /** @TODO add class names to divs to allow styling? */
+    for (const category of locales.categories) {
+      html += `<optgroup label="UTC">${category.label}`;
+      for (const option of category.options) {
+        html += `<option value="${option.timezoneName}">${option.timezoneLabel}</option>`;
+      }
+      html += `</optgroup>`;
+    }
+    el.innerHTML = html;
+    el.addEventListener("change", this.timezoneDropdownChange);
+    this.updateSelectedDropdown();
+  }
+
+  timezoneDropdownChange(e: Event) {
+    const dropdown = e.target as HTMLSelectElement;
+    const option = dropdown.options[dropdown.selectedIndex];
+    const tz = option.value;
+    if (tz !== globalState.state.timezone) {
+      globalState.setState({ timezone: tz });
+    }
+  }
+
+  /**
+  * Update the selected value in the dropdown list
+  *
+  * @TODO Confirm dropdown list will only show a timezone once. E.g. there are no values like
+        {
+          "timezoneName": "New York",
+          "timezoneLabel": "America/New_York"
+        },
+        {
+          "timezoneName": "Eastern Time – US & Canada",
+          "timezoneLabel": "America/New_York"
+        },
+
+   *
+   * If not, then the timzoneLabel will need to be part of state & will need to be guessed from locale
+   */
+  updateSelectedDropdown() {
+    const el = this.shadow?.getElementById("localeDropdown");
+    if (!el) return false;
+    const tz = globalState.state.timezone;
+    for (const option of el.querySelectorAll("option")) {
+      if (option.value === tz) {
+        option.selected = true;
+      }
+    }
+  }
 
   /** */
   displayTime(id: string, value: string) {
     const el = this.shadow?.getElementById(id);
     if (el) {
       if (value == "Invalid Date") {
-        el.innerHTML = '';
+        el.innerHTML = "";
       } else {
         el.innerHTML = value;
       }
@@ -173,14 +230,3 @@ const globalState = new SofatimeGlobalState({
 globalState.guessUsersLocale();
 customElements.define("sofa-time", Sofatime);
 window.sofatime = globalState;
-
-/*
-const event = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
-["en-GB", "en-US", "ko-KR", "es-MX"].forEach((locale) =>
-  ["full", "long", "medium", "short"].forEach((dateStyle) => {
-    console.log(locale, dateStyle);
-    console.log(event.toLocaleString(locale, { timeZone: "UTC", dateStyle: dateStyle }));
-    console.log("");
-  })
-);
-*/
